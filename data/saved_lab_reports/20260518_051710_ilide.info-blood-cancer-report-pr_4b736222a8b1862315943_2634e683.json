@@ -1,0 +1,97 @@
+{
+  "id": "2634e683146b4b33b8e1537158d0156b",
+  "created_at": "2026-05-18 05:17:10",
+  "file_name": "ilide.info-blood-cancer-report-pr_4b736222a8b1862315943ea579911256.pdf",
+  "report_subtype": "CBC / Hematology Report",
+  "risk_level": "Needs Attention",
+  "values": {
+    "g dl": {
+      "name": "G/Dl",
+      "value": 1.0,
+      "unit": "",
+      "low": 2.0,
+      "high": 16.0,
+      "source": "records"
+    },
+    "mil cmm": {
+      "name": "Mil/Cmm",
+      "value": 5.0,
+      "unit": "",
+      "low": 5.0,
+      "high": 8.2,
+      "source": "records"
+    },
+    "cu micron": {
+      "name": "Cu Micron",
+      "value": 7.0,
+      "unit": "",
+      "low": 6.0,
+      "high": 96.0,
+      "source": "records"
+    },
+    "picograms": {
+      "name": "Picograms",
+      "value": 2.0,
+      "unit": "",
+      "low": 7.0,
+      "high": 34.0,
+      "source": "records"
+    },
+    "hemoglobin": {
+      "name": "Hemoglobin",
+      "value": 20.9,
+      "unit": "g/dL",
+      "low": 12.0,
+      "high": 16.0,
+      "source": "records"
+    },
+    "pcv": {
+      "name": "Pcv",
+      "value": 36.6,
+      "unit": "%",
+      "low": 35.0,
+      "high": 47.0,
+      "source": "records"
+    },
+    "neutrophils": {
+      "name": "Neutrophils",
+      "value": 4.0,
+      "unit": "%",
+      "low": 40.0,
+      "high": 70.0,
+      "source": "records"
+    },
+    "lymphocytes": {
+      "name": "Lymphocytes",
+      "value": 20.0,
+      "unit": "%",
+      "low": 20.0,
+      "high": 45.0,
+      "source": "records"
+    },
+    "eosinophil": {
+      "name": "Eosinophil",
+      "value": 3.0,
+      "unit": "%",
+      "low": 0.0,
+      "high": 6.0,
+      "source": "records"
+    },
+    "monocytes": {
+      "name": "Monocytes",
+      "value": 2.0,
+      "unit": "%",
+      "low": 0.0,
+      "high": 8.0,
+      "source": "records"
+    },
+    "basophils": {
+      "name": "Basophils",
+      "value": 0.0,
+      "unit": "%",
+      "low": 0.0,
+      "high": 1.0,
+      "source": "records"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "683e6828169b4c8e8c6bdc4e07801470",
+  "created_at": "2026-05-15 17:21:26",
+  "file_name": "new report 1.png",
+  "report_subtype": "General Clinical Report",
+  "risk_level": "Low",
+  "values": {
+    "hba1c": {
+      "name": "Hba1C",
+      "value": 1.0,
+      "unit": "C",
+      "low": 4.0,
+      "high": 5.6,
+      "source_line": "BIOCHEMISTRY HBA1C GLYCOSYLATED"
+    }
+  }
+}

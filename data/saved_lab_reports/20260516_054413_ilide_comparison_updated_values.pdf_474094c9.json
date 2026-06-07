@@ -1,0 +1,49 @@
+{
+  "id": "474094c90edf4e6484e007d197baf1f5",
+  "created_at": "2026-05-16 05:44:13",
+  "file_name": "ilide_comparison_updated_values.pdf",
+  "report_subtype": "CBC / Hematology Report",
+  "risk_level": "Needs Attention",
+  "values": {
+    "gm dl": {
+      "name": "Gm/Dl",
+      "value": 1.0,
+      "unit": "",
+      "low": 2.0,
+      "high": 16.0,
+      "source": "records"
+    },
+    "mil cmm": {
+      "name": "Mil/Cmm",
+      "value": 5.0,
+      "unit": "",
+      "low": 5.0,
+      "high": 8.2,
+      "source": "records"
+    },
+    "cu micron": {
+      "name": "Cu Micron",
+      "value": 7.0,
+      "unit": "",
+      "low": 6.0,
+      "high": 96.0,
+      "source": "records"
+    },
+    "picograms": {
+      "name": "Picograms",
+      "value": 2.0,
+      "unit": "",
+      "low": 7.0,
+      "high": 34.0,
+      "source": "records"
+    },
+    "g dl": {
+      "name": "G/Dl",
+      "value": 3.0,
+      "unit": "",
+      "low": 2.0,
+      "high": 36.0,
+      "source": "records"
+    }
+  }
+}

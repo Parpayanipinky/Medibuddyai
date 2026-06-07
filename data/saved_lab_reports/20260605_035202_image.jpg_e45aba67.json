@@ -1,0 +1,49 @@
+{
+  "id": "e45aba67af854d72afc568ee7f6bdc2e",
+  "created_at": "2026-06-05 03:52:02",
+  "file_name": "image.jpg",
+  "report_subtype": "CBC / Hematology Report",
+  "risk_level": "Low",
+  "values": {
+    "d y patil plot": {
+      "name": "D Y Patil Plot",
+      "value": 22.0,
+      "unit": "277",
+      "low": 3.0,
+      "high": 5957.0,
+      "source": "records"
+    },
+    "neutrophils": {
+      "name": "Neutrophils",
+      "value": 4.0,
+      "unit": "10^3/uL",
+      "low": 0.0,
+      "high": 7.0,
+      "source": "records"
+    },
+    "lymphocytes": {
+      "name": "Lymphocytes",
+      "value": 2.0,
+      "unit": "",
+      "low": 0.0,
+      "high": 7.0,
+      "source": "records"
+    },
+    "eosinophils": {
+      "name": "Eosinophils",
+      "value": 2.0,
+      "unit": "",
+      "low": 0.0,
+      "high": 8.0,
+      "source": "records"
+    },
+    "basophils": {
+      "name": "Basophils",
+      "value": 0.0,
+      "unit": "1",
+      "low": 0.0,
+      "high": 1.0,
+      "source": "records"
+    }
+  }
+}

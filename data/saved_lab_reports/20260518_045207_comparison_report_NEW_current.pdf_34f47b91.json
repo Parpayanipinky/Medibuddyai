@@ -1,0 +1,17 @@
+{
+  "id": "34f47b91004147f88b3b44f92d55dba5",
+  "created_at": "2026-05-18 04:52:07",
+  "file_name": "comparison_report_NEW_current.pdf",
+  "report_subtype": "CBC / Hematology Report",
+  "risk_level": "Low",
+  "values": {
+    "g dl": {
+      "name": "G/Dl",
+      "value": 30.0,
+      "unit": "",
+      "low": 3.0,
+      "high": 34.4,
+      "source": "records"
+    }
+  }
+}

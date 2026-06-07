@@ -1,0 +1,57 @@
+{
+  "id": "11aa479ff74a48299515404653a25063",
+  "created_at": "2026-05-18 04:51:26",
+  "file_name": "Case_Report_A_rare_case_of_Intracranial_tuberculou.pdf",
+  "report_subtype": "CBC / Hematology Report",
+  "risk_level": "Low",
+  "values": {
+    "glucose": {
+      "name": "Glucose",
+      "value": 20.0,
+      "unit": "and",
+      "low": 70,
+      "high": 140,
+      "source_line": "blood count (cbc), APTT ESR, LFT, KFT lipid profile, and CSF analysis showed that glucose-CSF 20 and protein-"
+    },
+    "rbc": {
+      "name": "Rbc",
+      "value": 141.0,
+      "unit": "",
+      "low": 4.2,
+      "high": 5.9,
+      "source_line": "CSF 141, ph-7.2, no pus cell, and no RBC, culture-growth of Achromobactin xyloidine gram-negative bacteria. CBC"
+    },
+    "platelets": {
+      "name": "Platelets",
+      "value": -11.4,
+      "unit": "",
+      "low": 150000,
+      "high": 450000,
+      "source_line": "investigation finding shows that HB% -11.4, WBC- 13800, MCHC -32.4, MCV -70.6, MCH -22.8, total platelet count-"
+    },
+    "creatinine": {
+      "name": "Creatinine",
+      "value": 2.68,
+      "unit": "",
+      "low": 0.6,
+      "high": 1.3,
+      "source_line": "2.68, haematocrit (HCT)- 35.2, KFT finding shows that Urea -15 mg/dl, Creatinine- 0.6 mg/dl, sodium (Na)-132 meq/lit,"
+    },
+    "ast": {
+      "name": "Ast",
+      "value": 4.6,
+      "unit": "meq/lit",
+      "low": 0,
+      "high": 40,
+      "source_line": "potassium(k)m- 4.6 meq/lit, LFT finding shows that ALT-12 U/lit, AST -34 U/lit total protein -7.6 gm/dl, globulin-4.3"
+    },
+    "bilirubin": {
+      "name": "Bilirubin",
+      "value": 0.9,
+      "unit": "gm/dl",
+      "low": 0.1,
+      "high": 1.2,
+      "source_line": "gm/dl total bilirubin 0.9 gm/dl, APTT-36.4, ESR -13."
+    }
+  }
+}

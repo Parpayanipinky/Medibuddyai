@@ -1,0 +1,33 @@
+{
+  "id": "ef3929d0dea342c4b28b51f68d6092c2",
+  "created_at": "2026-05-13 05:39:01",
+  "file_name": "medical_report_72368a7858da4090b7d16cb3300cabf4.pdf",
+  "report_subtype": "CBC / Hematology Report",
+  "risk_level": "Moderate",
+  "values": {
+    "hemoglobin": {
+      "name": "Hemoglobin",
+      "value": 10.4,
+      "unit": "g/dl",
+      "low": 11.0,
+      "high": 14.5,
+      "source": "records"
+    },
+    "hematocrit": {
+      "name": "Hematocrit",
+      "value": 35.4,
+      "unit": "%",
+      "low": 34.5,
+      "high": 45.4,
+      "source": "records"
+    },
+    "neutrophils": {
+      "name": "Neutrophils",
+      "value": 4.5,
+      "unit": "",
+      "low": 3.9,
+      "high": 10.0,
+      "source": "records"
+    }
+  }
+}

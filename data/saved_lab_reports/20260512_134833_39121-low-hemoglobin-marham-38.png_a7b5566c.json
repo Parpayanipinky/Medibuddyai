@@ -1,0 +1,17 @@
+{
+  "id": "a7b5566c26b646f2a4060aa04fc5fbfb",
+  "created_at": "2026-05-12 13:48:33",
+  "file_name": "39121-low-hemoglobin-marham-38.png",
+  "report_subtype": "General Clinical Report",
+  "risk_level": "Low",
+  "values": {
+    "neutrophils": {
+      "name": "Neutrophils",
+      "value": 4.5,
+      "unit": "X1OE1ZIL",
+      "low": 3.61,
+      "high": 5.2,
+      "source_line": "RB.C_ 4.50 X1OE1ZIL (3.61-5.2) MCV 78.7 fL (78.1-95.3) MCH 23.1 pg (25.3-31.7) MCHC: 29.4 gldL (30.3-34.4) RDW This is an @jec ?.Qnic repoz & 4238t WB.C: 9.2 X1oE9IL (4.6-10.8) NEUTROPHILS LYMPHOCYTES O be usezfcw any legatzzur es EOSINOPHILS 2.6 % (0.3-7.4) MONOCYTES 11.0 % (3.9-10) BASOPHILS 0.4 % (0-1) Neutrophils lymphocytes ratio (NLR) 4.5 ratio (14) PLATELETS 330 X1OE9IL (154-433)"
+    }
+  }
+}

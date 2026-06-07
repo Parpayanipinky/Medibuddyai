@@ -1,0 +1,10 @@
+gradio
+groq
+opencv-python-headless
+numpy
+pandas
+pillow
+matplotlib
+python-dotenv
+PyMuPDF
+reportlab

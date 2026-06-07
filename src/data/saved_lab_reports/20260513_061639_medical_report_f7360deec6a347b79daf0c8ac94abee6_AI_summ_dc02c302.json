@@ -1,0 +1,25 @@
+{
+  "id": "dc02c3023de142cf8a3bb06e4861a911",
+  "created_at": "2026-05-13 06:16:39",
+  "file_name": "medical_report_f7360deec6a347b79daf0c8ac94abee6_AI_summary_English.pdf",
+  "report_subtype": "General Clinical Report",
+  "risk_level": "Low",
+  "values": {
+    "hemoglobin": {
+      "name": "Hemoglobin",
+      "value": 10.4,
+      "unit": "g/dl",
+      "low": 12.0,
+      "high": 17.5,
+      "source_line": "This laboratory report shows some abnormal blood cell values. The important findings include low hemoglobin (10.4 g/dl),"
+    },
+    "lymphocytes": {
+      "name": "Lymphocytes",
+      "value": 23.1,
+      "unit": "pg",
+      "low": 20,
+      "high": 45,
+      "source_line": "low MCH (23.1 pg) and MCHC (29.4 g/dl) values, and low neutrophils and lymphocytes. The monocytes value is high"
+    }
+  }
+}
