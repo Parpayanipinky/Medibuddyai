@@ -1,4 +1,4 @@
-﻿"""Run the MediBuddy AI user app.
+"""Run the MediBuddy AI user app.
 
 Admin panel is intentionally separated into admin_app.py so the polished user UI
 is not wrapped in a parent TabbedInterface that can break layout/CSS.

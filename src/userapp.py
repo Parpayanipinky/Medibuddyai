@@ -1,6 +1,6 @@
-﻿# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# CELL 2 OF 5 â€” IMPORTS
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# 
+# CELL 2 OF 5  IMPORTS
+# 
 
 import os
 import sys
@@ -127,9 +127,9 @@ print("pandas:", pd.__version__)
 print("gradio:", gr.__version__)
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# CELL 3 OF 5 â€” CONFIG + HELPERS
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# 
+# CELL 3 OF 5  CONFIG + HELPERS
+# 
 
 # ============================================================
 # GROQ CONFIG
@@ -208,8 +208,8 @@ XRAY_KEYWORDS = [
 ]
 
 LAB_PATTERNS = [
-    r"([A-Za-z][A-Za-z0-9\s\/\-\(\)%\+]{1,45})\s+([<>]?\s*\d+\.?\d*)\s*([A-Za-z%\/\-\^0-9\.ÂµÎ¼]*)\s+(\d+\.?\d*\s*[-â€“]\s*\d+\.?\d*)",
-    r"([A-Za-z][A-Za-z0-9\s\/\-\(\)%\+]{1,45})\s*[:\-]?\s*([<>]?\s*\d+\.?\d*)\s*([A-Za-z%\/\-\^0-9\.ÂµÎ¼]*)\s*\(?\s*(\d+\.?\d*\s*[-â€“]\s*\d+\.?\d*)\s*\)?",
+    r"([A-Za-z][A-Za-z0-9\s\/\-\(\)%\+]{1,45})\s+([<>]?\s*\d+\.?\d*)\s*([A-Za-z%\/\-\^0-9\.]*)\s+(\d+\.?\d*\s*[-]\s*\d+\.?\d*)",
+    r"([A-Za-z][A-Za-z0-9\s\/\-\(\)%\+]{1,45})\s*[:\-]?\s*([<>]?\s*\d+\.?\d*)\s*([A-Za-z%\/\-\^0-9\.]*)\s*\(?\s*(\d+\.?\d*\s*[-]\s*\d+\.?\d*)\s*\)?",
 ]
 
 
@@ -263,7 +263,7 @@ STRUCTURED_BLOCKLIST_WORDS = {
 }
 
 MEDICAL_UNIT_REGEX = re.compile(
-    r"^(?:g/dl|gm/dl|mg/dl|mmol/l|meq/l|iu/l|u/l|pg|fl|%|x10\^?\d+/?(?:l|ul|Âµl|ml)?|x10\^?\d+|10\^?\d+/?(?:l|ul|Âµl|ml)?|10\*\d+/?(?:l|ul|Âµl|ml)?|cells/?(?:cmm|ul|Âµl|ml)|/hpf|/lpf|ng/ml|pg/ml|miu/l|Âµiu/ml|u/ml|Âµ?g/dl|Âµ?mol/l|mm/hr|ratio|sec|seconds?)$",
+    r"^(?:g/dl|gm/dl|mg/dl|mmol/l|meq/l|iu/l|u/l|pg|fl|%|x10\^?\d+/?(?:l|ul|l|ml)?|x10\^?\d+|10\^?\d+/?(?:l|ul|l|ml)?|10\*\d+/?(?:l|ul|l|ml)?|cells/?(?:cmm|ul|l|ml)|/hpf|/lpf|ng/ml|pg/ml|miu/l|iu/ml|u/ml|?g/dl|?mol/l|mm/hr|ratio|sec|seconds?)$",
     flags=re.IGNORECASE,
 )
 
@@ -288,7 +288,7 @@ def extract_numeric_with_optional_unit(text):
     if not raw:
         return "", ""
     raw = raw.replace(",", " ")
-    m = re.search(r"([<>]?\d+(?:\.\d+)?)\s*([A-Za-zÂµÎ¼%/^xX0-9\.-]+)?", raw)
+    m = re.search(r"([<>]?\d+(?:\.\d+)?)\s*([A-Za-z%/^xX0-9\.-]+)?", raw)
     if not m:
         return "", ""
     value = clean_value_text(m.group(1))
@@ -300,7 +300,7 @@ def clean_unit_text(unit_text):
     unit = safe_str(unit_text).strip()
     if not unit:
         return ""
-    unit = unit.replace("Î¼", "Âµ")
+    unit = unit.replace("", "")
     unit = re.split(r"\s|,|;|:|\)|\]", unit)[0]
     unit = unit.strip(" .,:;()[]{}")
     if not unit:
@@ -476,7 +476,7 @@ def clean_text(text):
     if not text:
         return ""
     text = text.replace("\x0c", " ")
-    text = text.replace("â€¢", "- ")
+    text = text.replace("", "- ")
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
@@ -505,12 +505,12 @@ def _ocr_candidate_score(text):
     words = re.findall(r"[A-Za-z0-9]+", text)
     numbers = re.findall(r"[<>]?\d+(?:,\d{3})*(?:\.\d+)?", text)
     ranges = re.findall(
-        r"\d+(?:,\d{3})*(?:\.\d+)?\s*(?:-|â€“|â€”|to)\s*\d+(?:,\d{3})*(?:\.\d+)?",
+        r"\d+(?:,\d{3})*(?:\.\d+)?\s*(?:-|||to)\s*\d+(?:,\d{3})*(?:\.\d+)?",
         text,
         flags=re.IGNORECASE,
     )
     units = re.findall(
-        r"\b(?:mg/dl|g/dl|gm/dl|mmol/l|u/l|iu/l|x10\^?\d+/?(?:l|ul|Âµl|ml)?|10\^?\d+/?(?:l|ul|Âµl|ml)?|%|fl|pg|ng/ml|miu/l|Âµiu/ml)\b",
+        r"\b(?:mg/dl|g/dl|gm/dl|mmol/l|u/l|iu/l|x10\^?\d+/?(?:l|ul|l|ml)?|10\^?\d+/?(?:l|ul|l|ml)?|%|fl|pg|ng/ml|miu/l|iu/ml)\b",
         text,
         flags=re.IGNORECASE,
     )
@@ -553,8 +553,8 @@ def _dynamic_lab_row_score(text):
         r"bilirubin", r"troponin", r"ck\s*-?\s*mb", r"sodium", r"potassium", r"chloride",
     ]
     number_re = r"[<>]?\d+(?:,\d{3})*(?:\.\d+)?"
-    range_re = r"\d+(?:,\d{3})*(?:\.\d+)?\s*(?:-|â€“|â€”|to)\s*\d+(?:,\d{3})*(?:\.\d+)?"
-    unit_re = r"(?:g/dl|gm/dl|mg/dl|mmol/l|u/l|iu/l|x10\^?\d+/?[a-zÂµÎ¼]*|10\^?\d+/?[a-zÂµÎ¼]*|%|fl|pg|ng/ml|miu/l|ratio)"
+    range_re = r"\d+(?:,\d{3})*(?:\.\d+)?\s*(?:-|||to)\s*\d+(?:,\d{3})*(?:\.\d+)?"
+    unit_re = r"(?:g/dl|gm/dl|mg/dl|mmol/l|u/l|iu/l|x10\^?\d+/?[a-z]*|10\^?\d+/?[a-z]*|%|fl|pg|ng/ml|miu/l|ratio)"
 
     lines = [re.sub(r"\s+", " ", safe_str(x)).strip() for x in text.splitlines() if safe_str(x).strip()]
     hits = 0
@@ -625,7 +625,7 @@ def _looks_like_strong_page_text(page_text):
     words = len(re.findall(r"[A-Za-z0-9]+", text))
     numbers = len(re.findall(r"[<>]?\d+(?:,\d{3})*(?:\.\d+)?", text))
     ranges = len(re.findall(
-        r"\d+(?:,\d{3})*(?:\.\d+)?\s*(?:-|â€“|â€”|to)\s*\d+(?:,\d{3})*(?:\.\d+)?",
+        r"\d+(?:,\d{3})*(?:\.\d+)?\s*(?:-|||to)\s*\d+(?:,\d{3})*(?:\.\d+)?",
         text,
         flags=re.IGNORECASE,
     ))
@@ -668,7 +668,7 @@ def _build_ocr_image_variants(image_path):
         if scale != 1.0:
             gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
 
-        # Variant 1: denoised grayscale â€” always included, good for printed reports.
+        # Variant 1: denoised grayscale  always included, good for printed reports.
         denoised = cv2.fastNlMeansDenoising(gray, None, 10, 7, 21)
         temp_paths.append(_write_temp_ocr_image(denoised))
 
@@ -773,16 +773,16 @@ def _has_clean_cbc_rows(text):
     if not text:
         return False
     row_patterns = [
-        r"\bHA?EMOGLOBIN\b.*?\d+(?:\.\d+)?\s*(?:g/dl|gm/dl).*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
-        r"\bHA?EMATOCRIT\b.*?\d+(?:\.\d+)?\s*%.*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
-        r"\bR\s*\.?\s*B\s*\.?\s*C\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
-        r"\bM\s*\.?\s*C\s*\.?\s*V\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
-        r"\bM\s*\.?\s*C\s*\.?\s*H\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
-        r"\bM\s*\.?\s*C\s*\.?\s*H\s*\.?\s*C\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
-        r"\bW\s*\.?\s*B\s*\.?\s*C\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
-        r"\bNEUTROPHILS?\b.*?\d+(?:\.\d+)?\s*%.*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
-        r"\bLYMPHOCYTES?\b.*?\d+(?:\.\d+)?\s*%.*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
-        r"\bPLATELETS?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?\)?",
+        r"\bHA?EMOGLOBIN\b.*?\d+(?:\.\d+)?\s*(?:g/dl|gm/dl).*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
+        r"\bHA?EMATOCRIT\b.*?\d+(?:\.\d+)?\s*%.*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
+        r"\bR\s*\.?\s*B\s*\.?\s*C\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
+        r"\bM\s*\.?\s*C\s*\.?\s*V\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
+        r"\bM\s*\.?\s*C\s*\.?\s*H\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
+        r"\bM\s*\.?\s*C\s*\.?\s*H\s*\.?\s*C\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
+        r"\bW\s*\.?\s*B\s*\.?\s*C\.?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
+        r"\bNEUTROPHILS?\b.*?\d+(?:\.\d+)?\s*%.*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
+        r"\bLYMPHOCYTES?\b.*?\d+(?:\.\d+)?\s*%.*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
+        r"\bPLATELETS?\b.*?\d+(?:\.\d+)?.*?\(?\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?\)?",
     ]
     hits = 0
     for line in text.splitlines():
@@ -1033,7 +1033,7 @@ def detect_report_type(text, file_path=None):
     lab_hits = sum(1 for k in LAB_KEYWORDS if re.search(rf"\b{re.escape(k)}\b", t))
     radiology_hits = sum(1 for k in RADIOLOGY_KEYWORDS if re.search(rf"\b{re.escape(k)}\b", t))
     narrative_hits = sum(1 for k in ["diagnosis", "history", "medication", "advice", "recommendation", "clinical", "complaint", "summary", "notes"] if re.search(rf"\b{re.escape(k)}\b", t))
-    range_hits = len(re.findall(r"\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?", t))
+    range_hits = len(re.findall(r"\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?", t))
 
     if ext in [".png", ".jpg", ".jpeg"] and any(re.search(rf"\b{re.escape(k)}\b", t) for k in XRAY_KEYWORDS):
         return {
@@ -1143,7 +1143,7 @@ def looks_unit_token(token):
     token = safe_str(token).strip()
     if not token:
         return False
-    return bool(re.fullmatch(r"[A-Za-zÂµÎ¼%/\^xX0-9\.-]+", token))
+    return bool(re.fullmatch(r"[A-Za-z%/\^xX0-9\.-]+", token))
 
 
 def is_noise_or_heading(line):
@@ -1163,9 +1163,9 @@ def is_noise_or_heading(line):
 
 
 def normalize_range_text(ref_text):
-    ref_text = safe_str(ref_text).replace("â€“", "-").replace("â€”", "-").replace("âˆ’", "-")
+    ref_text = safe_str(ref_text).replace("", "-").replace("", "-").replace("", "-")
     ref_text = ref_text.replace(",", "")
-    ref_text = re.sub(r"\s*(?:to|â€“|â€”|âˆ’)\s*", "-", ref_text, flags=re.IGNORECASE)
+    ref_text = re.sub(r"\s*(?:to|||)\s*", "-", ref_text, flags=re.IGNORECASE)
     ref_text = re.sub(r"\s+", "", ref_text)
     return ref_text
 
@@ -1184,7 +1184,7 @@ def build_candidate_lines(text):
         candidates.append(line)
         if i + 1 < len(raw_lines):
             nxt = raw_lines[i + 1]
-            if re.search(r"[A-Za-z]", line) and (re.search(r"\d", nxt) or re.search(r"\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?", nxt)):
+            if re.search(r"[A-Za-z]", line) and (re.search(r"\d", nxt) or re.search(r"\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?", nxt)):
                 candidates.append(f"{line} {nxt}")
     seen = set()
     ordered = []
@@ -1352,13 +1352,13 @@ def parse_noisy_cbc_records(text):
         ("Platelets", r"PLATELETS?|\bPLT\b"),
     ]
 
-    unit_pattern = r"(?:x\s*10\s*E?\s*\d+\s*/?\s*[A-Za-zÂµÎ¼]*|x10E?\d+/?[A-Za-zÂµÎ¼]*|x10\^?\d+/?[A-Za-zÂµÎ¼]*|10\^?\d+/?[A-Za-zÂµÎ¼]*|g\s*/\s*dL|gm\s*/\s*dL|mg\s*/\s*dL|mmol\s*/\s*L|IU\s*/\s*L|U\s*/\s*L|fL|pg|%|ratio)"
+    unit_pattern = r"(?:x\s*10\s*E?\s*\d+\s*/?\s*[A-Za-z]*|x10E?\d+/?[A-Za-z]*|x10\^?\d+/?[A-Za-z]*|10\^?\d+/?[A-Za-z]*|g\s*/\s*dL|gm\s*/\s*dL|mg\s*/\s*dL|mmol\s*/\s*L|IU\s*/\s*L|U\s*/\s*L|fL|pg|%|ratio)"
     number_pattern = r"[<>]?\d+(?:,\d{3})*(?:\.\d+)?"
-    range_pattern = rf"\(?\s*(?P<low>\d+(?:\.\d+)?)\s*(?:-|â€“|â€”|to)\s*(?P<high>\d+(?:\.\d+)?)\s*\)?"
+    range_pattern = rf"\(?\s*(?P<low>\d+(?:\.\d+)?)\s*(?:-|||to)\s*(?P<high>\d+(?:\.\d+)?)\s*\)?"
 
     def normalize_line(line):
         line = safe_str(line)
-        line = line.replace("â€”", "-").replace("â€“", "-").replace("âˆ’", "-")
+        line = line.replace("", "-").replace("", "-").replace("", "-")
         line = re.sub(r"\s+", " ", line).strip()
         return line
 
@@ -1451,8 +1451,8 @@ def parse_lab_records(text):
 
     def fix_lab_ocr_line(line):
         line = safe_str(line)
-        line = line.replace("â€”", "-").replace("â€“", "-").replace("âˆ’", "-")
-        line = line.replace("â€œ", '"').replace("â€", '"').replace("â€™", "'")
+        line = line.replace("", "-").replace("", "-").replace("", "-")
+        line = line.replace("", '"').replace("", '"').replace("", "'")
         line = re.sub(r"[|]+", " ", line)
 
         # Common OCR unit mistakes.
@@ -1514,7 +1514,7 @@ def parse_lab_records(text):
 
     num = r"[<>]?\d+(?:,\d{3})*(?:\.\d+)?"
     ref_num = r"\d+(?:,\d{3})*(?:\.\d+)?"
-    unit = r"[A-Za-zÂµÎ¼%/^xX0-9\.\-\*]+"
+    unit = r"[A-Za-z%/^xX0-9\.\-\*]+"
     sep = r"(?:-|to)"
     trailing_status = r"(?:\s*(?:H|L|N|High|Low|Normal|Abnormal|Flag|Result))?"
 
@@ -1634,7 +1634,7 @@ def parse_lab_records(text):
         # For a known lab row, the first meaningful number after the label is usually the patient value.
         value_match = number_matches[0]
         after_value = before_range[value_match.end():]
-        unit_match = re.search(r"(x\s*10\s*e?\d+/?[A-Za-zÂµÎ¼]*|x10E?\d+/?[A-Za-zÂµÎ¼]*|10\^?\d+/?[A-Za-zÂµÎ¼]*|g/dl|gm/dl|mg/dl|mmol/l|iu/l|u/l|fl|pg|%|ratio)", after_value, flags=re.IGNORECASE)
+        unit_match = re.search(r"(x\s*10\s*e?\d+/?[A-Za-z]*|x10E?\d+/?[A-Za-z]*|10\^?\d+/?[A-Za-z]*|g/dl|gm/dl|mg/dl|mmol/l|iu/l|u/l|fl|pg|%|ratio)", after_value, flags=re.IGNORECASE)
         unit_text = unit_match.group(1) if unit_match else ""
         unit_text = unit_text.replace(" ", "").replace("x10E", "x10^").replace("x10e", "x10^")
         return {
@@ -1784,7 +1784,7 @@ def evaluate_record(record):
         comparison = ">"
 
     value_str = value_raw.replace("<", "").replace(">", "").strip()
-    ref = safe_str(record.get("Reference Range", "")).replace("â€“", "-")
+    ref = safe_str(record.get("Reference Range", "")).replace("", "-")
     unit = safe_str(record.get("Unit", ""))
 
     status = "Unknown"
@@ -1913,7 +1913,7 @@ def format_detected_sections_md(sections, report_category):
     return "\n".join(lines).strip()
 
 def parse_reference_bounds(ref_text):
-    ref_text = safe_str(ref_text).replace("â€“", "-").strip()
+    ref_text = safe_str(ref_text).replace("", "-").strip()
     parts = [p.strip() for p in ref_text.split("-")]
     if len(parts) != 2:
         return None, None
@@ -2093,14 +2093,14 @@ def build_summary_card_html(report_category, report_subtype, patient_info, df, r
                 </div>
             </div>
             <div class="summary-item summary-low">
-                <div class="summary-icon">â†˜</div>
+                <div class="summary-icon"></div>
                 <div>
                     <div class="summary-item-title">{len(low_df)} low values</div>
                     <div class="summary-item-text">{low_names}</div>
                 </div>
             </div>
             <div class="summary-item summary-normal">
-                <div class="summary-icon">âœ“</div>
+                <div class="summary-icon"></div>
                 <div>
                     <div class="summary-item-title">{len(normal_df)} normal values</div>
                     <div class="summary-item-text">{normal_names}</div>
@@ -2135,7 +2135,7 @@ def build_summary_card_html(report_category, report_subtype, patient_info, df, r
                 </div>
             </div>
             <div class="summary-item summary-normal">
-                <div class="summary-icon">âœ“</div>
+                <div class="summary-icon"></div>
                 <div>
                     <div class="summary-item-title">{secondary_title}</div>
                     <div class="summary-item-text">{secondary_text}</div>
@@ -2304,9 +2304,9 @@ def generate_final_report_summary(report_category, report_subtype, patient_info,
 
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# 
 # 2-DAY POLISH FEATURES: practical, stable improvements for presentation
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# 
 PARSER_VERSION = "dynamic-v5-merge-ai-and-ocr-all-rows"
 REPORT_ANALYSIS_CACHE = {}
 XRAY_RESULT_CACHE = {}
@@ -2369,7 +2369,7 @@ def medical_text_confidence_score(text):
     ]
     score = 0
     score += sum(1 for term in medical_terms if term in text)
-    score += min(5, len(re.findall(r"\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?", text)))
+    score += min(5, len(re.findall(r"\d+(?:\.\d+)?\s*[-]\s*\d+(?:\.\d+)?", text)))
     score += min(5, len(re.findall(r"\d+(?:\.\d+)?\s*(?:mg/dl|g/dl|mmol/l|u/l|iu/l|%|fl|pg|ng/ml|x10)", text, flags=re.I)))
     return score
 
@@ -2477,7 +2477,7 @@ def build_validation_error_html(message):
             </div>
             <div class="xray-status-badge xray-red">! Invalid file</div>
         </div>
-        <div class="xray-disclaimer-box">âš ï¸ {html.escape(safe_str(message))}</div>
+        <div class="xray-disclaimer-box"> {html.escape(safe_str(message))}</div>
     </div>
     """
 
@@ -2737,39 +2737,39 @@ def _basic_urdu_translation(text, context="medical report"):
     lower = text.lower()
     # Common generated summary patterns
     if "educational" in lower and ("diagnosis" in lower or "medical advice" in lower):
-        return "ÛŒÛ Ø®Ù„Ø§ØµÛ ØµØ±Ù ØªØ¹Ù„ÛŒÙ…ÛŒ Ù…Ù‚ØµØ¯ Ú©Û’ Ù„ÛŒÛ’ ÛÛ’Û” ÛŒÛ Ø­ØªÙ…ÛŒ Ø·Ø¨ÛŒ ØªØ´Ø®ÛŒØµ ÛŒØ§ Ø¹Ù„Ø§Ø¬ Ú©Ø§ Ù…Ø´ÙˆØ±Û Ù†ÛÛŒÚº ÛÛ’Û” Ø¨Ø±Ø§ÛÙ Ú©Ø±Ù… Ù…Ø³ØªÙ†Ø¯ ÚˆØ§Ú©Ù¹Ø± Ø³Û’ Ù…Ø´ÙˆØ±Û Ú©Ø±ÛŒÚºÛ”"
+        return "                        "
     if "no patient information" in lower:
-        return "Ø§Ù¾ Ù„ÙˆÚˆ Ú©ÛŒ Ú¯Ø¦ÛŒ Ø±Ù¾ÙˆØ±Ù¹ Ù…ÛŒÚº Ù…Ø±ÛŒØ¶ Ú©ÛŒ Ù…Ø¹Ù„ÙˆÙ…Ø§Øª ÙˆØ§Ø¶Ø­ Ø·ÙˆØ± Ù¾Ø± Ù†ÛÛŒÚº Ù…Ù„ Ø³Ú©ÛŒÚºÛ”"
+        return "              "
     if "x-ray" in lower or "x ray" in lower or "radiology" in lower:
         status_line = ""
         if "needs attention" in lower:
-            status_line = " Ø§Ø³ ØªØµÙˆÛŒØ± Ù…ÛŒÚº Ú©Ú†Ú¾ Ø§ÛŒØ³ÛŒ Ø¨Ø§ØªÛŒÚº Ù†Ø¸Ø± Ø¢ Ø±ÛÛŒ ÛÛŒÚº Ø¬Ù† Ù¾Ø± ÚˆØ§Ú©Ù¹Ø± ÛŒØ§ Ø±ÛŒÚˆÛŒÙˆÙ„ÙˆØ¬Ø³Ù¹ Ú©ÛŒ ØªÙˆØ¬Û Ø¶Ø±ÙˆØ±ÛŒ ÛÛ’Û”"
+            status_line = "                   "
         elif "no obvious acute abnormality" in lower:
-            status_line = " Ø§Ø³ ØªØµÙˆÛŒØ± Ù…ÛŒÚº Ú©ÙˆØ¦ÛŒ ÙˆØ§Ø¶Ø­ ÙÙˆØ±ÛŒ ØºÛŒØ± Ù…Ø¹Ù…ÙˆÙ„ÛŒ Ø¨Ø§Øª Ù†Ø¸Ø± Ù†ÛÛŒÚº Ø¢ØªÛŒØŒ Ù„ÛŒÚ©Ù† Ø­ØªÙ…ÛŒ Ø±Ø§Ø¦Û’ ÚˆØ§Ú©Ù¹Ø± Ø¯Û’ Ú¯Ø§Û”"
+            status_line = "                  "
         elif "limited" in lower or "unclear" in lower:
-            status_line = " ØªØµÙˆÛŒØ± Ù…Ú©Ù…Ù„ Ø·ÙˆØ± Ù¾Ø± ÙˆØ§Ø¶Ø­ Ù†ÛÛŒÚºØŒ Ø§Ø³ Ù„ÛŒÛ’ ÚˆØ§Ú©Ù¹Ø± Ø³Û’ Ø¯ÙˆØ¨Ø§Ø±Û Ø¬Ø§Ø¦Ø²Û Ù„ÛŒÙ†Ø§ Ø¨ÛØªØ± ÛÛ’Û”"
+            status_line = "               "
         return (
-            "ÛŒÛ Ø§ÛŒÚ© Ø§ÛŒÚ©Ø³ Ø±Û’ Ø±Ù¾ÙˆØ±Ù¹ Ú©Ø§ Ø¢Ø³Ø§Ù† Ø§Ø±Ø¯Ùˆ Ø®Ù„Ø§ØµÛ ÛÛ’Û”" + status_line +
-            " Ø±Ù¾ÙˆØ±Ù¹ Ù…ÛŒÚº Ø¯Ø±Ø¬ Ø§ÛÙ… Ù†Ú©Ø§Øª Ú©Ùˆ Ø¢Ø³Ø§Ù† Ø§Ù„ÙØ§Ø¸ Ù…ÛŒÚº Ø³Ù…Ø¬Ú¾Ø§ÛŒØ§ Ú¯ÛŒØ§ ÛÛ’ ØªØ§Ú©Û ØµØ§Ø±Ù Ú©Ùˆ Ø¨Ù†ÛŒØ§Ø¯ÛŒ Ø³Ù…Ø¬Ú¾ Ø¢ Ø³Ú©Û’Û” "
-            "ÛŒÛ Ø­ØªÙ…ÛŒ ØªØ´Ø®ÛŒØµ Ù†ÛÛŒÚº ÛÛ’Ø› Ø¯Ø±Ø¯ØŒ Ø³ÙˆØ¬Ù†ØŒ Ú†ÙˆÙ¹ ÛŒØ§ Ø­Ø±Ú©Øª Ù…ÛŒÚº Ú©Ù…ÛŒ Ú©ÛŒ ØµÙˆØ±Øª Ù…ÛŒÚº ÚˆØ§Ú©Ù¹Ø± Ø³Û’ ÙÙˆØ±ÛŒ Ù…Ø´ÙˆØ±Û Ú©Ø±ÛŒÚºÛ”"
+            "         " + status_line +
+            "                    "
+            "                   "
         )
     if "laboratory" in lower or "cbc" in lower or "hemoglobin" in lower or "monocytes" in lower or "low" in lower or "high" in lower:
         parts = []
         if "hemoglobin" in lower:
-            parts.append("ÛÛŒÙ…ÙˆÚ¯Ù„ÙˆØ¨Ù† Ú©ÛŒ Ù…Ù‚Ø¯Ø§Ø± Ø±Ù¾ÙˆØ±Ù¹ Ù…ÛŒÚº Ù‚Ø§Ø¨Ù„Ù ØªÙˆØ¬Û ÛÛ’Û”")
+            parts.append("       ")
         if "low" in lower:
-            parts.append("Ú©Ú†Ú¾ Ù¹ÛŒØ³Ù¹ Ù†Ø§Ø±Ù…Ù„ Ø­Ø¯ Ø³Û’ Ú©Ù… ÛÛŒÚºÛ”")
+            parts.append("      ")
         if "high" in lower:
-            parts.append("Ú©Ú†Ú¾ Ù¹ÛŒØ³Ù¹ Ù†Ø§Ø±Ù…Ù„ Ø­Ø¯ Ø³Û’ Ø²ÛŒØ§Ø¯Û ÛÛŒÚºÛ”")
+            parts.append("      ")
         if not parts:
-            parts.append("ÛŒÛ Ù„ÛŒØ¨Ø§Ø±Ù¹Ø±ÛŒ Ø±Ù¾ÙˆØ±Ù¹ Ú©Û’ Ù†ØªØ§Ø¦Ø¬ Ú©Ø§ Ø¢Ø³Ø§Ù† Ø®Ù„Ø§ØµÛ ÛÛ’Û”")
-        return " ".join(parts) + " Ø§Ù† Ù†ØªØ§Ø¦Ø¬ Ú©Ø§ Ù…Ø·Ù„Ø¨ Ø³Ù…Ø¬Ú¾Ù†Û’ Ú©Û’ Ù„ÛŒÛ’ Ø§Ù¾Ù†ÛŒ Ù…Ú©Ù…Ù„ Ø¹Ù„Ø§Ù…Ø§Øª Ø§ÙˆØ± Ø·Ø¨ÛŒ ØªØ§Ø±ÛŒØ® Ú©Û’ Ø³Ø§ØªÚ¾ ÚˆØ§Ú©Ù¹Ø± Ø³Û’ Ù…Ø´ÙˆØ±Û Ú©Ø±ÛŒÚºÛ” ÛŒÛ Ù…Ø¹Ù„ÙˆÙ…Ø§Øª ØµØ±Ù ØªØ¹Ù„ÛŒÙ…ÛŒ Ù…Ù‚ØµØ¯ Ú©Û’ Ù„ÛŒÛ’ ÛÛŒÚºÛ”"
+            parts.append("        ")
+        return " ".join(parts) + "                           "
     # General fallback: not same English; gives useful Urdu note and keeps critical values if any.
     values = re.findall(r"[A-Za-z][A-Za-z\s/%()_-]{1,35}:?\s*\d+(?:\.\d+)?\s*[A-Za-z/%]*", text)[:8]
     value_note = "\n".join(values)
     if value_note:
-        return "Ø±Ù¾ÙˆØ±Ù¹ Ù…ÛŒÚº Ø¯Ø±Ø¬ Ú†Ù†Ø¯ Ø§ÛÙ… Ù‚Ø¯Ø±ÛŒÚº Ù†ÛŒÚ†Û’ Ø¯ÛŒ Ú¯Ø¦ÛŒ ÛÛŒÚºÛ” Ø¨Ø±Ø§ÛÙ Ú©Ø±Ù… Ø§Ù† Ú©ÛŒ ØªØ´Ø±ÛŒØ­ Ú©Û’ Ù„ÛŒÛ’ ÚˆØ§Ú©Ù¹Ø± Ø³Û’ Ù…Ø´ÙˆØ±Û Ú©Ø±ÛŒÚº:\n" + value_note
-    return "ÛŒÛ Ø±Ù¾ÙˆØ±Ù¹ Ú©Ø§ Ø¢Ø³Ø§Ù† Ø§Ø±Ø¯Ùˆ ØªØ¹Ù„ÛŒÙ…ÛŒ Ø®Ù„Ø§ØµÛ ÛÛ’Û” Ø¨Ø±Ø§ÛÙ Ú©Ø±Ù… Ø§Ø³Û’ Ø­ØªÙ…ÛŒ ØªØ´Ø®ÛŒØµ Ù†Û Ø³Ù…Ø¬Ú¾ÛŒÚº Ø§ÙˆØ± Ù…Ø³ØªÙ†Ø¯ ÚˆØ§Ú©Ù¹Ø± Ø³Û’ Ù…Ø´ÙˆØ±Û Ú©Ø±ÛŒÚºÛ”"
+        return "                    :\n" + value_note
+    return "                    "
 
 def _maybe_translate_to_urdu(text, context="medical report"):
     """Translate text to simple Urdu. Uses Groq when available; otherwise uses a local Urdu fallback."""
@@ -2827,7 +2827,7 @@ def _draw_medibuddy_pdf_logo(canv, doc):
         canv.setStrokeColor(colors.HexColor("#B8DCD0"))
         canv.roundRect(icon_x, icon_y, icon_size, icon_size, 8, stroke=1, fill=1)
 
-        # DNA-style mark matching the application's existing ðŸ§¬ logo concept.
+        # DNA-style mark matching the application's existing  logo concept.
         canv.setStrokeColor(colors.HexColor("#08785D"))
         canv.setLineWidth(1.4)
         canv.bezier(icon_x + 8, icon_y + 6, icon_x + 18, icon_y + 9, icon_x + 8, icon_y + 17, icon_x + 18, icon_y + 20)
@@ -3013,7 +3013,7 @@ def save_pdf_report(payload, language_choice="English"):
 
     def add_english_report():
         story.append(Paragraph("AI Medical Report Interpreter Summary", title_style))
-        story.append(Paragraph("Educational summary only Â· Not a confirmed diagnosis", subtitle_style))
+        story.append(Paragraph("Educational summary only  Not a confirmed diagnosis", subtitle_style))
         add_key_value_table([
             ("Report Category", report_category),
             ("Report Type", report_subtype),
@@ -3056,22 +3056,22 @@ def save_pdf_report(payload, language_choice="English"):
         section_text = "\n".join([f"{k}: {'; '.join(v) if isinstance(v, list) else v}" for k, v in radiology_sections.items()])
         lab_text = "\n".join([f"{r.get('Parameter','')}: {r.get('Value','')} {r.get('Unit','')} | {r.get('Status','')}" for r in lab_records[:25]])
         extra_urdu = _maybe_translate_to_urdu((section_text + "\n" + lab_text).strip(), "medical findings") if (section_text or lab_text) else ""
-        UH("Ø§Û’ Ø¢Ø¦ÛŒ Ù…ÛŒÚˆÛŒÚ©Ù„ Ø±Ù¾ÙˆØ±Ù¹ Ø®Ù„Ø§ØµÛ")
-        U("ØªØ¹Ù„ÛŒÙ…ÛŒ Ø®Ù„Ø§ØµÛ ÙÙ‚Ø· Â· ÛŒÛ Ø­ØªÙ…ÛŒ ØªØ´Ø®ÛŒØµ Ù†ÛÛŒÚº ÛÛ’")
-        UH("Ø±Ù¾ÙˆØ±Ù¹ Ú©ÛŒ Ù…Ø¹Ù„ÙˆÙ…Ø§Øª")
-        U(f"Ø±Ù¾ÙˆØ±Ù¹ Ú©ÛŒÙ¹ÛŒÚ¯Ø±ÛŒ: {report_category}\nØ±Ù¾ÙˆØ±Ù¹ Ù¹Ø§Ø¦Ù¾: {report_subtype}")
+        UH("    ")
+        U("        ")
+        UH("  ")
+        U(f" : {report_category}\n : {report_subtype}")
         if patient_info:
-            UH("Ù…Ø±ÛŒØ¶ Ú©ÛŒ Ù…Ø¹Ù„ÙˆÙ…Ø§Øª")
+            UH("  ")
             U("\n".join([f"{k}: {v}" for k, v in patient_info.items()]))
-        UH("Ø®Ù„Ø§ØµÛ")
+        UH("")
         U(urdu_summary)
         if extra_urdu:
-            UH("Ø§ÛÙ… Ù†ØªØ§Ø¦Ø¬")
+            UH(" ")
             U(extra_urdu)
-        UH("Ø§Û’ Ø¢Ø¦ÛŒ ÙˆØ¶Ø§Ø­Øª")
+        UH("  ")
         U(urdu_explanation)
-        UH("Ø§ÛÙ… Ù†ÙˆÙ¹")
-        U("ÛŒÛ Ø±Ù¾ÙˆØ±Ù¹ ØµØ±Ù ØªØ¹Ù„ÛŒÙ…ÛŒ Ù…Ù‚ØµØ¯ Ú©Û’ Ù„ÛŒÛ’ ÛÛ’Û” Ø§Ø³Û’ Ø­ØªÙ…ÛŒ Ø·Ø¨ÛŒ ØªØ´Ø®ÛŒØµ ÛŒØ§ Ø¹Ù„Ø§Ø¬ Ú©Ø§ Ù…Ø´ÙˆØ±Û Ù†Û Ø³Ù…Ø¬Ú¾ÛŒÚºÛ” Ø¨Ø±Ø§ÛÙ Ú©Ø±Ù… Ù…Ø³ØªÙ†Ø¯ ÚˆØ§Ú©Ù¹Ø± Ø³Û’ Ù…Ø´ÙˆØ±Û Ú©Ø±ÛŒÚºÛ”")
+        UH(" ")
+        U("                        ")
 
     # Always generate exactly one clean English report.
     add_english_report()
@@ -3226,14 +3226,14 @@ Supported examples include: chest/lungs, ribs, clavicle, shoulder, humerus/arm, 
 
 Use a 3-layer workflow:
 
-Layer 1 â€” safety classifier:
+Layer 1  safety classifier:
 - Identify body part, view, image quality, and whether doctor/radiologist review is recommended.
 - Do not diagnose. This is an educational triage-style review.
 - Use "Needs attention" when ANY abnormal-looking or uncertain important finding is present.
 - Use "Limited / unclear image" when body part, view, or image quality is not reliable.
 - Use "No obvious acute abnormality" ONLY when body part and view are clear, the image is reviewable, and no body-part-specific abnormality is seen.
 
-Layer 2 â€” body-part-specific finding extractor:
+Layer 2  body-part-specific finding extractor:
 First detect the body part and view. Then use the matching checklist. If the body part is not listed, use the universal X-ray checklist.
 
 Universal X-ray checklist for ANY body part:
@@ -3265,7 +3265,7 @@ Bone/joint X-rays checklist:
 - For skull/face/jaw/dental: skull/facial/jaw/dental bones, sinus/jaw area, fracture-like line, alignment, dental hardware.
 - For abdomen/KUB: visible abdomen field, bowel gas/stool pattern if visible, calcification/foreign body/device if visible; do not diagnose obstruction or stone.
 
-Layer 3 â€” safe report writer:
+Layer 3  safe report writer:
 - Convert findings into simple patient-friendly bullet-style wording.
 - Never say confirmed diagnosis, successful surgery, healed fracture, exact infection, TB, cancer, pneumonia, or exact hardware type unless a radiology report explicitly says it.
 - Use cautious words: "appears", "possible", "may represent", "needs review", "should be confirmed".
@@ -3504,13 +3504,13 @@ def _xray_as_list(value, max_items=12):
         raw_items = list(value)
     elif isinstance(value, str):
         # Split only when the string looks like a semicolon/newline list.
-        raw_items = re.split(r"\s*(?:\n|;|\u2022)\s*", value) if (";" in value or "\n" in value or "â€¢" in value) else [value]
+        raw_items = re.split(r"\s*(?:\n|;|\u2022)\s*", value) if (";" in value or "\n" in value or "" in value) else [value]
     else:
         raw_items = [safe_str(value)]
 
     cleaned, seen = [], set()
     for item in raw_items:
-        item = safe_str(item).strip(" -â€¢\n\t")
+        item = safe_str(item).strip(" -\n\t")
         if not item:
             continue
         key = re.sub(r"\s+", " ", item.lower())
@@ -4088,7 +4088,7 @@ def normalize_xray_result(result):
     key_findings = result.get("key_findings", [])
     if not isinstance(key_findings, list):
         key_findings = [safe_str(key_findings)]
-    key_findings = [_xray_safe_phrase(x).strip(" -â€¢\n\t") for x in key_findings if safe_str(x).strip()]
+    key_findings = [_xray_safe_phrase(x).strip(" -\n\t") for x in key_findings if safe_str(x).strip()]
     if not key_findings:
         key_findings = ["No clear structured findings were returned by the model."]
 
@@ -4172,7 +4172,7 @@ def fallback_xray_result():
 def xray_status_classes(status):
     status = safe_str(status).strip()
     if status == "No obvious acute abnormality":
-        return "xray-green", "âœ“"
+        return "xray-green", ""
     if status == "Needs attention":
         return "xray-red", "!"
     return "xray-amber", "?"
@@ -4181,7 +4181,7 @@ def build_xray_visual_html(result):
     result = normalize_xray_result(result)
     status_cls, status_icon = xray_status_classes(result["status"])
     findings_html = "".join(
-        f'<div class="xray-finding">â€¢ {html.escape(item)}</div>'
+        f'<div class="xray-finding"> {html.escape(item)}</div>'
         for item in result["key_findings"]
     )
     raw_note_html = ""
@@ -4225,7 +4225,7 @@ def build_xray_visual_html(result):
 
         {raw_note_html}
 
-        <div class="xray-disclaimer-box">âš ï¸ {html.escape(result["caution"])}</div>
+        <div class="xray-disclaimer-box"> {html.escape(result["caution"])}</div>
     </div>
     """
 
@@ -4255,12 +4255,12 @@ def build_xray_markdown(result):
 **Status:** {result['status']}  
 **Doctor review required:** {'Yes' if layer1.get('doctor_review_required') else 'Not clearly required by this educational review'}  
 
-### Layer 1 â€” Safety classifier
+### Layer 1  Safety classifier
 - Image quality: {layer1.get('image_quality', 'Not specified')}
 - Safety status: {layer1.get('status', result['status'])}
 - Reason: {layer1.get('urgency_reason', 'Not specified')}
 
-### Layer 2 â€” Detailed finding extractor
+### Layer 2  Detailed finding extractor
 - Visible anatomy: {visible}
 - Hardware check: {hardware_text}
 - Confidence: {confidence_text}
@@ -4271,7 +4271,7 @@ def build_xray_markdown(result):
 ### Key findings
 {findings}
 
-### Layer 3 â€” Safe report writer
+### Layer 3  Safe report writer
 {layer3.get('patient_friendly_summary', result['simple_explanation'])}
 
 ### Questions to ask your doctor
@@ -5143,7 +5143,7 @@ def _xray_is_isolated_extremity_shape(gray):
         note = (
             f"isolated extremity shape {isolated}; aspect {aspect:.2f}; active area {active_ratio:.0%}; "
             f"dark area {dark_ratio:.0%}; elongation {elongation:.2f}; edge density {edge_density:.1%}; "
-            f"largest bright component {largest_bright:.0%}; main angle {angle:.0f}Â°"
+            f"largest bright component {largest_bright:.0%}; main angle {angle:.0f}"
         )
         return bool(isolated), note
     except Exception as e:
@@ -6192,7 +6192,7 @@ def _detect_body_part_locally(gray, h, w):
 
 
 def _analyze_xray_locally(image_path):
-    """Local OpenCV-based X-ray analysis â€” runs when no API key is configured.
+    """Local OpenCV-based X-ray analysis  runs when no API key is configured.
 
     It provides a simple educational summary for any body-part X-ray without
     hardcoding chest/lung language. The local method cannot diagnose subtle
@@ -6580,7 +6580,7 @@ def analyze_xray_image(image_path, selected_xray_region="Auto-detect"):
             })
 
         if client is None:
-            # No GROQ API key â€” use local OpenCV-based pixel analysis, then run
+            # No GROQ API key  use local OpenCV-based pixel analysis, then run
             # the same universal safety gate used for vision-model output.
             study_meta = detect_xray_study_metadata(image_path)
             result = _analyze_xray_locally(image_path)
@@ -6740,9 +6740,9 @@ def analyze_xray_for_gradio(uploaded_xray_file, selected_xray_region="Auto-detec
 
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# CELL 4 OF 5 â€” MAIN FUNCTIONS
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# 
+# CELL 4 OF 5  MAIN FUNCTIONS
+# 
 
 def analyze_medical_report_ui(uploaded_file, pdf_language="English"):
     pdf_language = "English"  # English-only PDF export
@@ -6803,7 +6803,7 @@ def analyze_medical_report_ui(uploaded_file, pdf_language="English"):
         report_meta = detect_report_type(formatted_text, file_path=file_path)
         report_category = report_meta["category"]
         report_subtype = report_meta["subtype"]
-        report_type_display = f"{report_category} â†’ {report_subtype}"
+        report_type_display = f"{report_category}  {report_subtype}"
 
         patient_info = extract_patient_info(formatted_text)
         patient_info_md = format_patient_info_md(patient_info)
@@ -6825,7 +6825,7 @@ def analyze_medical_report_ui(uploaded_file, pdf_language="English"):
                 report_subtype = "CBC / Hematology Report"
             else:
                 report_subtype = "General Laboratory Report"
-            report_type_display = f"{report_category} â†’ {report_subtype}"
+            report_type_display = f"{report_category}  {report_subtype}"
 
         detected_sections = {}
         if report_category == "Radiology Report":
@@ -6957,11 +6957,11 @@ def ask_question_about_report(question, chat_history):
     if not CURRENT_REPORT_CONTEXT.get("formatted_text") and not CURRENT_REPORT_CONTEXT.get("ai_explanation"):
         chat_history = chat_history + [
             {"role": "user", "content": question},
-            {"role": "assistant", "content": "âš ï¸ Please analyze a lab report or X-ray first. Then I can answer your questions using your actual report data."}
+            {"role": "assistant", "content": " Please analyze a lab report or X-ray first. Then I can answer your questions using your actual report data."}
         ]
         return chat_history, ""
 
-    # â”€â”€ Collect all report data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    #  Collect all report data 
     lab_records        = CURRENT_REPORT_CONTEXT.get("lab_records", []) or []
     patient_info       = CURRENT_REPORT_CONTEXT.get("patient_info", {}) or {}
     formatted_text     = CURRENT_REPORT_CONTEXT.get("formatted_text", "") or ""
@@ -6989,7 +6989,7 @@ def ask_question_about_report(question, chat_history):
         else:
             unknown_records.append(compact)
 
-    # â”€â”€ Build chat context for multi-turn memory â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    #  Build chat context for multi-turn memory 
     chat_context = []
     for msg in chat_history[-6:]:
         role    = msg.get("role", "")    if isinstance(msg, dict) else ""
@@ -6997,7 +6997,7 @@ def ask_question_about_report(question, chat_history):
         if content:
             chat_context.append({"role": role, "content": safe_str(content)[:600]})
 
-    # â”€â”€ Markdown table helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    #  Markdown table helper 
     def markdown_table(records, max_rows=20):
         if not records:
             return "_No matching values found._"
@@ -7010,7 +7010,7 @@ def ask_question_about_report(question, chat_history):
             )
         return "\n".join(rows)
 
-    # â”€â”€ Smart local fallback: tries to answer directly from data â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    #  Smart local fallback: tries to answer directly from data 
     q_lower = question.lower()
 
     def _pi(keys):
@@ -7060,7 +7060,7 @@ def ask_question_about_report(question, chat_history):
     # Abnormal / table / what's wrong
     elif any(w in q_lower for w in ["abnormal", "table", "wrong", "problem", "issue", "serious", "attention", "high", "low"]):
         fallback_answer = (
-            f"### âš ï¸ Values Needing Attention ({len(abnormal_records)} found)\n\n"
+            f"###  Values Needing Attention ({len(abnormal_records)} found)\n\n"
             f"{markdown_table(abnormal_records)}\n\n"
             f"_Please consult a qualified doctor for medical advice._"
         )
@@ -7072,7 +7072,7 @@ def ask_question_about_report(question, chat_history):
             f"- **Report type:** {report_subtype or report_category or 'Unknown'}\n"
             f"- **Total lab tests:** {len(lab_records)}\n"
             f"- **Abnormal values:** {len(abnormal_records)}\n\n"
-            f"### âš ï¸ Abnormal Values\n\n{markdown_table(abnormal_records)}\n\n"
+            f"###  Abnormal Values\n\n{markdown_table(abnormal_records)}\n\n"
             f"_Please consult a qualified doctor for medical advice._"
         )
 
@@ -7080,23 +7080,23 @@ def ask_question_about_report(question, chat_history):
 
     if client is not None:
         try:
-            prompt = f"""You are MediBuddy AI â€” a smart, direct, friendly educational medical-report assistant.
+            prompt = f"""You are MediBuddy AI  a smart, direct, friendly educational medical-report assistant.
 
-CRITICAL RULES â€” READ CAREFULLY:
+CRITICAL RULES  READ CAREFULLY:
 1. Answer ONLY the specific question asked. Do NOT give a full report summary unless the user asks for it.
-2. If the user asks ONE thing (e.g. "patient name") â€” answer ONLY that one thing in 1-2 lines, then add the safety note.
-3. If asked patient name â†’ just say "The patient name is [name]." â€” nothing else except the safety note.
-4. If asked age â†’ just say "The patient's age is [age]."
-5. If asked about a specific test (hemoglobin etc.) â†’ give value, unit, reference range, status in 2-3 lines.
-6. If asked for a table / abnormal values / what's wrong â†’ give a clean Markdown table.
-7. If asked for advice / diet / lifestyle â†’ give specific practical advice based on the abnormal values.
+2. If the user asks ONE thing (e.g. "patient name")  answer ONLY that one thing in 1-2 lines, then add the safety note.
+3. If asked patient name  just say "The patient name is [name]."  nothing else except the safety note.
+4. If asked age  just say "The patient's age is [age]."
+5. If asked about a specific test (hemoglobin etc.)  give value, unit, reference range, status in 2-3 lines.
+6. If asked for a table / abnormal values / what's wrong  give a clean Markdown table.
+7. If asked for advice / diet / lifestyle  give specific practical advice based on the abnormal values.
 8. Answer in the SAME language the user wrote in (Urdu / English / mix). Be warm and concise.
 9. Use bold for key values. Use tables ONLY when listing multiple items.
 10. ALWAYS end with this exact line: _Please consult a qualified doctor for medical advice._
 11. DO NOT start with "Report Summary" or show all report fields unless specifically asked.
-12. DO NOT say "I cannot access" â€” you have all the data below.
+12. DO NOT say "I cannot access"  you have all the data below.
 
-â”â”â” REPORT DATA â”â”â”
+ REPORT DATA 
 
 Patient Information:
 {json.dumps(patient_info, ensure_ascii=False, indent=2)}
@@ -7122,7 +7122,7 @@ Radiology: {json.dumps(radiology_sections, ensure_ascii=False, indent=2)}
 Recent Chat:
 {json.dumps(chat_context, ensure_ascii=False, indent=2)}
 
-â”â”â” USER QUESTION â”â”â”
+ USER QUESTION 
 {question}
 
 Answer the question DIRECTLY and SPECIFICALLY. Do NOT dump the full report. Just answer what was asked."""
@@ -7149,11 +7149,11 @@ print("Main functions loaded successfully")
 
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# CELL 5 OF 5 â€” MEDIBUDDY AI GRADIO UI
+# 
+# CELL 5 OF 5  MEDIBUDDY AI GRADIO UI
 # Redesigned patient-friendly interface:
-# Page 1 Welcome Â· Page 2 Choose option Â· Page 3 Lab result Â· Page 4 X-ray result Â· Page 5 AI assistant
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# Page 1 Welcome  Page 2 Choose option  Page 3 Lab result  Page 4 X-ray result  Page 5 AI assistant
+# 
 
 def _ui_escape(value):
     return html.escape(safe_str(value))
@@ -7201,8 +7201,8 @@ def build_uploaded_file_info(uploaded_file):
     return gr.update(
         value=f"""
         <div class='uploaded-file-inline-box'>
-            <span class='uploaded-file-icon'>ðŸ“„</span>
-            <div><b>{_ui_escape(file_name)}</b><small>Uploaded successfully Â· {html.escape(size_label)}</small></div>
+            <span class='uploaded-file-icon'></span>
+            <div><b>{_ui_escape(file_name)}</b><small>Uploaded successfully  {html.escape(size_label)}</small></div>
         </div>
         """,
         visible=True
@@ -7211,7 +7211,7 @@ def build_uploaded_file_info(uploaded_file):
 def build_placeholder_card(title="No result yet", text="Upload a report and click analyze to see your result here."):
     return f"""
     <div class="empty-result-card saas-empty-state fade-in-up">
-        <div class="empty-emoji">ðŸ§¾</div>
+        <div class="empty-emoji"></div>
         <h3>{_ui_escape(title)}</h3>
         <p>{_ui_escape(text)}</p>
         <div class="jump-text">All Set</div>
@@ -7273,7 +7273,7 @@ def build_ai_explanation_card(ai_explanation):
     return f"""
     <div class="soft-card magic-card ai-card">
         <div class="card-title">AI Medical Explanation</div>        <div class="ai-bubble">
-            <div class="mini-robot">ðŸ¤–</div>
+            <div class="mini-robot"></div>
             <p>{text}</p>
         </div>
     </div>
@@ -7287,19 +7287,19 @@ def build_health_gauge(total, normal, needs_attention):
 
     if total <= 0:
         label = "Waiting for report"
-        face = "ðŸ™‚"
+        face = ""
         tone = "muted"
     elif needs_attention <= 0:
         label = "Normal"
-        face = "ðŸ˜Š"
+        face = ""
         tone = "success"
     elif needs_attention <= max(1, total * 0.25):
         label = "Needs Attention"
-        face = "ðŸ™‚"
+        face = ""
         tone = "warning"
     else:
         label = "Needs Doctor Review"
-        face = "ðŸ˜Ÿ"
+        face = ""
         tone = "danger"
 
     return f"""
@@ -7335,7 +7335,7 @@ def build_abnormal_panel(lab_records):
         return """
         <div class="soft-card">
             <div class="card-title">Abnormal / Needs Attention</div>
-            <div class="normal-box">âœ… No abnormal lab value was detected in the extracted table.</div>
+            <div class="normal-box"> No abnormal lab value was detected in the extracted table.</div>
         </div>
         """
 
@@ -7420,12 +7420,12 @@ def build_lab_dashboard_html(report_type_display, ai_explanation, lab_table_html
             tone = "danger" if status == "High" else "warning" if status == "Low" else "muted"
             attention_rows.append(f"""
                 <div class="lab-attention-item">
-                    <div><b>{_ui_escape(parameter)}</b><span>{_ui_escape(value)} Â· Ref: {_ui_escape(ref or "Not listed")}</span></div>
+                    <div><b>{_ui_escape(parameter)}</b><span>{_ui_escape(value)}  Ref: {_ui_escape(ref or "Not listed")}</span></div>
                     <em class="pill pill-{tone}">{_ui_escape(status)}</em>
                 </div>
             """)
     if not attention_rows:
-        attention_html = '<div class="normal-box">âœ… No abnormal value was detected in the extracted lab table.</div>'
+        attention_html = '<div class="normal-box"> No abnormal value was detected in the extracted lab table.</div>'
     else:
         attention_html = ''.join(attention_rows[:8])
 
@@ -7453,11 +7453,11 @@ def build_lab_dashboard_html(report_type_display, ai_explanation, lab_table_html
     <div class="result-page lab-redesign">
         <div class="lab-hero-head">
             <div>
-                <div class="step-kicker">Step 3 of 3 â€” Analyze + Chat</div>
+                <div class="step-kicker">Step 3 of 3  Analyze + Chat</div>
                 <h2>Lab Report Analysis</h2>
                 <p>Your uploaded medical report has been decoded into a clean, readable dashboard.</p>
             </div>
-            <div class="complete-chip green-chip">âœ“ Analysis Completed</div>
+            <div class="complete-chip green-chip"> Analysis Completed</div>
         </div>
 
         <div class="wide-section visible-polish-summary">
@@ -7494,7 +7494,7 @@ def build_lab_dashboard_html(report_type_display, ai_explanation, lab_table_html
             <div class="soft-card magic-card ai-card-wide">
                 <div class="card-title">AI Medical Explanation</div>
                 <div class="ai-bubble lab-ai-bubble">
-                    <div class="mini-robot">ðŸ¤–</div>
+                    <div class="mini-robot"></div>
                     <p>{clean_ai}</p>
                 </div>
             </div>
@@ -7579,16 +7579,16 @@ def build_xray_personalized_suggestions(result):
     elif _is_orthopedic_body_part(body_part):
         suggestions = [
             f"Rest {body_area_text} and avoid heavy use, sports, lifting, or putting weight on it until a clinician reviews the X-ray.",
-            "For pain or swelling, use a cold pack wrapped in cloth for 15â€“20 minutes at a time, especially during the first 24â€“48 hours.",
+            "For pain or swelling, use a cold pack wrapped in cloth for 1520 minutes at a time, especially during the first 2448 hours.",
             f"If swelling is present, keep {body_area_text} raised when possible and avoid tight wrapping that causes numbness or more pain.",
-            "For pain relief, you may consider paracetamol/acetaminophen, or ibuprofen/naproxen only if these are safe for you. Avoid anti-inflammatory painkillers if you have stomach ulcers, kidney disease, blood thinners, pregnancy concerns, or an allergyâ€”ask a doctor or pharmacist.",
+            "For pain relief, you may consider paracetamol/acetaminophen, or ibuprofen/naproxen only if these are safe for you. Avoid anti-inflammatory painkillers if you have stomach ulcers, kidney disease, blood thinners, pregnancy concerns, or an allergyask a doctor or pharmacist.",
             f"Get urgent medical help if you have {symptom_phrase}.",
         ]
     else:
         suggestions = [
             "Ask a qualified doctor or radiologist to review the original X-ray.",
             "If you have pain, swelling, fever, numbness, weakness, or worsening symptoms, seek medical advice promptly.",
-            "For pain relief, use only medicines that are safe for you and follow the label or your clinicianâ€™s advice.",
+            "For pain relief, use only medicines that are safe for you and follow the label or your clinicians advice.",
             "Keep the uploaded image and this simple summary for your appointment.",
         ]
 
@@ -7714,7 +7714,7 @@ def _xray_easy_summary_bullets(result, max_items=5):
 
     cleaned, seen = [], set()
     for bullet in bullets:
-        bullet = _xray_clean_generated_text(bullet, view=view, body_part=body_part, max_sentences=1).strip(" -â€¢")
+        bullet = _xray_clean_generated_text(bullet, view=view, body_part=body_part, max_sentences=1).strip(" -")
         if not bullet:
             continue
         if not bullet.endswith(('.', '!', '?')):
@@ -7739,7 +7739,7 @@ def _xray_summary_bullets_html(result):
 
 def _xray_summary_bullets_text(result):
     bullets = _xray_easy_summary_bullets(result)
-    return "\n".join(f"â€¢ {item}" for item in bullets)
+    return "\n".join(f" {item}" for item in bullets)
 
 
 
@@ -7772,7 +7772,7 @@ def build_xray_dashboard_html(result):
     findings_html = "".join(
         f"""
         <div class="saas-finding-card pop-card">
-            <div class="finding-alert-icon">âš </div>
+            <div class="finding-alert-icon"></div>
             <p>{_ui_escape(item)}</p>
         </div>
         """
@@ -7784,11 +7784,11 @@ def build_xray_dashboard_html(result):
     if result["status"] == "No obvious acute abnormality":
         attention_label = "Stable Review"
         attention_class = "ok"
-        attention_icon = "âœ“"
+        attention_icon = ""
     elif result["status"] == "Needs attention":
         attention_label = "Need Review"
         attention_class = "warn"
-        attention_icon = "âš "
+        attention_icon = ""
     else:
         attention_label = "Limited Review"
         attention_class = "soft"
@@ -7801,7 +7801,7 @@ def build_xray_dashboard_html(result):
     <div class="saas-dashboard xray-saas-dashboard fade-in-up">
         <div class="saas-result-header">
             <div>
-                <div class="saas-kicker">Radiology dashboard Â· educational review</div>
+                <div class="saas-kicker">Radiology dashboard  educational review</div>
                 <h2>X-ray Analysis Result</h2>
                 <p>Your uploaded X-ray is translated into a simple, review-friendly summary.</p>
             </div>
@@ -7809,20 +7809,20 @@ def build_xray_dashboard_html(result):
         </div>
 
         <div class="saas-widget-grid three">
-            <div class="saas-widget magic-card"><span>ðŸ©»</span><b>Image Uploaded</b><small>Preview available</small></div>
-            <div class="saas-widget magic-card"><span>ðŸ“„</span><b>Report Ready</b><small>English PDF summary</small></div>
+            <div class="saas-widget magic-card"><span></span><b>Image Uploaded</b><small>Preview available</small></div>
+            <div class="saas-widget magic-card"><span></span><b>Report Ready</b><small>English PDF summary</small></div>
             <div class="saas-widget magic-card pulse-soft"><span>{attention_icon}</span><b>{_ui_escape(result['status'])}</b><small>Attention level</small></div>
         </div>
 
         <div class="saas-two-col">
             <div class="saas-card magic-card summary-card slide-up-card">
-                <div class="saas-card-title">âœ¨ X-ray Visual Summary <em class="jump-text">AI Summary Ready</em> <span class="medibuddy-type ai-type-label" data-texts="Need Review||Visual Insight Ready"></span></div>
+                <div class="saas-card-title"> X-ray Visual Summary <em class="jump-text">AI Summary Ready</em> <span class="medibuddy-type ai-type-label" data-texts="Need Review||Visual Insight Ready"></span></div>
                 {summary_bullets_html}
                 <div class="xray-status-badge {status_cls}">{status_icon} {_ui_escape(result['status'])}</div>
             </div>
 
             <div class="saas-card magic-card slide-up-card">
-                <div class="saas-card-title">ðŸ“Œ General Report Category and Type</div>
+                <div class="saas-card-title"> General Report Category and Type</div>
                 <div class="saas-info-row"><span>Category</span><b>Radiology</b></div>
                 <div class="saas-info-row"><span>Type</span><b>{_ui_escape(_xray_display_type_label(result))}</b></div>
                 <div class="saas-info-row"><span>View</span><b>{_ui_escape(result['view'])}</b></div>
@@ -7831,12 +7831,12 @@ def build_xray_dashboard_html(result):
 
         <div class="saas-two-col">
             <div class="saas-card magic-card slide-up-card">
-                <div class="saas-card-title">ðŸš¨ Key Findings <em class="jump-text">Need Review</em></div>
+                <div class="saas-card-title"> Key Findings <em class="jump-text">Need Review</em></div>
                 <div class="saas-findings-grid">{findings_html}</div>
             </div>
 
             <div class="saas-card magic-card slide-up-card">
-                <div class="saas-card-title">ðŸ’¬ Simple Explanation</div>
+                <div class="saas-card-title"> Simple Explanation</div>
                 <p class="simple-readable">{simple}</p>
             </div>
         </div>
@@ -7850,7 +7850,7 @@ def build_xray_dashboard_html(result):
             {build_xray_personalized_suggestions(result)}
         </div>
 
-        <div class="saas-disclaimer">âš  Educational use only. This is not a confirmed diagnosis. Please consult a qualified healthcare professional.</div>
+        <div class="saas-disclaimer"> Educational use only. This is not a confirmed diagnosis. Please consult a qualified healthcare professional.</div>
     </div>
     """
 
@@ -7962,7 +7962,7 @@ def fill_question(text):
     return text
 
 def render_step_progress(active_step, page_label=""):
-    """Clean green step tracker: âœ“ â€” 2 â€” 3 with labels below."""
+    """Clean green step tracker:   2  3 with labels below."""
     steps = [
         (1, "WELCOME"),
         (2, "CHOOSE"),
@@ -7971,7 +7971,7 @@ def render_step_progress(active_step, page_label=""):
     items = []
     for number, title in steps:
         cls = "active" if number == active_step else "done" if number < active_step else "upcoming"
-        icon = "âœ“" if number < active_step else str(number)
+        icon = "" if number < active_step else str(number)
         items.append(
             f'<div class="progress-item {cls}">'
             f'  <div class="progress-dot">{icon}</div>'
@@ -10037,7 +10037,7 @@ button.primary, #lab-analyze-btn, #xray-analyze-btn, #choice-lab-btn, #choice-xr
     animation: buttonFloat 3s ease-in-out infinite;
 }
 #get-started-btn::after {
-    content: "âžœ";
+    content: "";
     display:inline-grid;
     place-items:center;
     margin-left:10px;
@@ -10691,9 +10691,9 @@ button:hover, .gr-button:hover { transform: translateY(-2px); box-shadow: 0 12px
 
 CUSTOM_CSS += '\n/* =========================================================\n   FINAL SINGLE UPLOAD FIX\n   Keeps only the real Gradio upload box visible.\n   Removes fake duplicate drop areas from Lab + X-ray cards.\n   ========================================================= */\n.premium-drop-helper {\n    display: none !important;\n}\n\n/* Reset wrappers so they don\'t become a second upload panel */\n.single-green-file,\n.single-green-file .wrap,\n.single-green-file .block,\n.single-green-file > div {\n    background: transparent !important;\n    border: 0 !important;\n    box-shadow: none !important;\n    min-height: auto !important;\n}\n\n/* Style ONLY the actual Gradio file dropzone / upload label */\n.single-green-file [data-testid="file-upload"],\n.single-green-file [data-testid="file-upload-label"],\n.single-green-file label[data-testid="file-upload-label"],\n.single-green-file .file-preview,\n.single-green-file .file,\n.single-green-file .upload-container {\n    border: 2px dashed rgba(15, 143, 104, .38) !important;\n    background: linear-gradient(180deg, rgba(238, 251, 245, .92), #ffffff) !important;\n    border-radius: 24px !important;\n    min-height: 185px !important;\n    display: flex !important;\n    align-items: center !important;\n    justify-content: center !important;\n    text-align: center !important;\n    color: #0f8f68 !important;\n}\n\n/* Uploaded file row stays connected under same top upload card */\n.single-green-file [data-testid="file"] {\n    background: #f7fcfa !important;\n    border: 1px solid rgba(15,143,104,.18) !important;\n    border-radius: 16px !important;\n    margin-top: 12px !important;\n    color: #176b56 !important;\n}\n\n/* Strong green upload text/buttons */\n.single-green-file button,\n.single-green-file a,\n.single-green-file span,\n.single-green-file p {\n    color: #0f7f61 !important;\n}\n\n/* Make upload cards clean and single-panel */\n.upload-card {\n    overflow: hidden !important;\n}\n'
 
-CUSTOM_CSS += '\n/* =========================================================\n   CLEAN GREEN UPLOAD CARD FIX\n   Removes ugly native "Choose file / No file chosen" look\n   Keeps one upload area only\n   ========================================================= */\n\n/* Upload card shell */\n.upload-card {\n    background: #ffffff !important;\n    border-radius: 28px !important;\n    border: 1px solid rgba(13, 116, 88, 0.12) !important;\n    box-shadow: 0 18px 45px rgba(18, 74, 61, 0.08) !important;\n    padding: 24px !important;\n    overflow: hidden !important;\n}\n\n/* Hide duplicate helper if it exists */\n.premium-drop-helper {\n    display: none !important;\n}\n\n/* Make Gradio file component become one clean upload panel */\n.single-green-file {\n    background: transparent !important;\n    border: none !important;\n    box-shadow: none !important;\n}\n\n/* Main file component wrapper */\n.single-green-file .wrap,\n.single-green-file .block,\n.single-green-file > div,\n.single-green-file div[data-testid="file"],\n.single-green-file div[data-testid="file-upload"] {\n    background: transparent !important;\n    border: none !important;\n    box-shadow: none !important;\n}\n\n/* The real clickable upload label / drop zone */\n.single-green-file label,\n.single-green-file label[data-testid="file-upload-label"],\n.single-green-file [data-testid="file-upload-label"] {\n    width: 100% !important;\n    min-height: 210px !important;\n    border: 2px dashed rgba(15, 143, 104, 0.36) !important;\n    border-radius: 24px !important;\n    background:\n        radial-gradient(circle at 50% 30%, rgba(22, 163, 127, 0.13), transparent 32%),\n        linear-gradient(180deg, rgba(240, 253, 248, 0.95), #ffffff) !important;\n    display: flex !important;\n    align-items: center !important;\n    justify-content: center !important;\n    text-align: center !important;\n    color: #08785d !important;\n    font-weight: 800 !important;\n    cursor: pointer !important;\n    transition: all .25s ease !important;\n}\n\n/* Hover effect */\n.single-green-file label:hover,\n.single-green-file label[data-testid="file-upload-label"]:hover,\n.single-green-file [data-testid="file-upload-label"]:hover {\n    border-color: #0f8f68 !important;\n    box-shadow: 0 18px 35px rgba(15, 143, 104, 0.12) !important;\n    transform: translateY(-2px) !important;\n}\n\n/* Hide native browser file input text */\n.single-green-file input[type="file"] {\n    opacity: 0 !important;\n    width: 0.1px !important;\n    height: 0.1px !important;\n    position: absolute !important;\n    overflow: hidden !important;\n    z-index: -1 !important;\n}\n\n/* Hide any visible native button if browser exposes it */\n.single-green-file input::file-selector-button {\n    display: none !important;\n}\n\n/* Remove small default file button look */\n.single-green-file button[aria-label="Upload"],\n.single-green-file .file-preview button,\n.single-green-file .upload-button {\n    background: #e8f8f1 !important;\n    color: #08785d !important;\n    border: 1px solid rgba(15, 143, 104, 0.22) !important;\n    border-radius: 12px !important;\n}\n\n/* Uploaded file row */\n.single-green-file .file-preview,\n.single-green-file [data-testid="file-preview"],\n.single-green-file .file {\n    margin-top: 14px !important;\n    background: #f8fffb !important;\n    border: 1px solid rgba(15, 143, 104, 0.16) !important;\n    border-radius: 16px !important;\n    padding: 12px 14px !important;\n    color: #176b56 !important;\n}\n\n/* Strong green text */\n.single-green-file span,\n.single-green-file p,\n.single-green-file a {\n    color: #08785d !important;\n}\n\n/* Fix oversized inner empty box */\n.single-green-file .empty,\n.single-green-file .upload-container {\n    min-height: 0 !important;\n}\n\n/* Optional cloud icon feeling for supported Gradio text */\n.single-green-file label::before,\n.single-green-file [data-testid="file-upload-label"]::before {\n    content: "â˜";\n    width: 58px;\n    height: 58px;\n    border-radius: 50%;\n    background: #dcf8ec;\n    color: #078f69;\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    font-size: 30px;\n    margin-right: 16px;\n    box-shadow: 0 10px 28px rgba(15, 143, 104, 0.14);\n}\n'
+CUSTOM_CSS += '\n/* =========================================================\n   CLEAN GREEN UPLOAD CARD FIX\n   Removes ugly native "Choose file / No file chosen" look\n   Keeps one upload area only\n   ========================================================= */\n\n/* Upload card shell */\n.upload-card {\n    background: #ffffff !important;\n    border-radius: 28px !important;\n    border: 1px solid rgba(13, 116, 88, 0.12) !important;\n    box-shadow: 0 18px 45px rgba(18, 74, 61, 0.08) !important;\n    padding: 24px !important;\n    overflow: hidden !important;\n}\n\n/* Hide duplicate helper if it exists */\n.premium-drop-helper {\n    display: none !important;\n}\n\n/* Make Gradio file component become one clean upload panel */\n.single-green-file {\n    background: transparent !important;\n    border: none !important;\n    box-shadow: none !important;\n}\n\n/* Main file component wrapper */\n.single-green-file .wrap,\n.single-green-file .block,\n.single-green-file > div,\n.single-green-file div[data-testid="file"],\n.single-green-file div[data-testid="file-upload"] {\n    background: transparent !important;\n    border: none !important;\n    box-shadow: none !important;\n}\n\n/* The real clickable upload label / drop zone */\n.single-green-file label,\n.single-green-file label[data-testid="file-upload-label"],\n.single-green-file [data-testid="file-upload-label"] {\n    width: 100% !important;\n    min-height: 210px !important;\n    border: 2px dashed rgba(15, 143, 104, 0.36) !important;\n    border-radius: 24px !important;\n    background:\n        radial-gradient(circle at 50% 30%, rgba(22, 163, 127, 0.13), transparent 32%),\n        linear-gradient(180deg, rgba(240, 253, 248, 0.95), #ffffff) !important;\n    display: flex !important;\n    align-items: center !important;\n    justify-content: center !important;\n    text-align: center !important;\n    color: #08785d !important;\n    font-weight: 800 !important;\n    cursor: pointer !important;\n    transition: all .25s ease !important;\n}\n\n/* Hover effect */\n.single-green-file label:hover,\n.single-green-file label[data-testid="file-upload-label"]:hover,\n.single-green-file [data-testid="file-upload-label"]:hover {\n    border-color: #0f8f68 !important;\n    box-shadow: 0 18px 35px rgba(15, 143, 104, 0.12) !important;\n    transform: translateY(-2px) !important;\n}\n\n/* Hide native browser file input text */\n.single-green-file input[type="file"] {\n    opacity: 0 !important;\n    width: 0.1px !important;\n    height: 0.1px !important;\n    position: absolute !important;\n    overflow: hidden !important;\n    z-index: -1 !important;\n}\n\n/* Hide any visible native button if browser exposes it */\n.single-green-file input::file-selector-button {\n    display: none !important;\n}\n\n/* Remove small default file button look */\n.single-green-file button[aria-label="Upload"],\n.single-green-file .file-preview button,\n.single-green-file .upload-button {\n    background: #e8f8f1 !important;\n    color: #08785d !important;\n    border: 1px solid rgba(15, 143, 104, 0.22) !important;\n    border-radius: 12px !important;\n}\n\n/* Uploaded file row */\n.single-green-file .file-preview,\n.single-green-file [data-testid="file-preview"],\n.single-green-file .file {\n    margin-top: 14px !important;\n    background: #f8fffb !important;\n    border: 1px solid rgba(15, 143, 104, 0.16) !important;\n    border-radius: 16px !important;\n    padding: 12px 14px !important;\n    color: #176b56 !important;\n}\n\n/* Strong green text */\n.single-green-file span,\n.single-green-file p,\n.single-green-file a {\n    color: #08785d !important;\n}\n\n/* Fix oversized inner empty box */\n.single-green-file .empty,\n.single-green-file .upload-container {\n    min-height: 0 !important;\n}\n\n/* Optional cloud icon feeling for supported Gradio text */\n.single-green-file label::before,\n.single-green-file [data-testid="file-upload-label"]::before {\n    content: "";\n    width: 58px;\n    height: 58px;\n    border-radius: 50%;\n    background: #dcf8ec;\n    color: #078f69;\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    font-size: 30px;\n    margin-right: 16px;\n    box-shadow: 0 10px 28px rgba(15, 143, 104, 0.14);\n}\n'
 
-CUSTOM_CSS += '\n/* =========================================================\n   POLISHED LAB + XRAY UPLOAD LAYOUT FIX\n   Goal: clean single upload card, no cutting, no overflow.\n   Keeps Gradio upload logic untouched.\n   ========================================================= */\n\n/* Upload card should be tall enough and never clip content */\n.upload-card {\n    background: #ffffff !important;\n    border-radius: 28px !important;\n    border: 1px solid rgba(13, 116, 88, 0.12) !important;\n    box-shadow: 0 18px 45px rgba(18, 74, 61, 0.08) !important;\n    padding: 26px 28px 28px 28px !important;\n    overflow: visible !important;\n    min-height: 330px !important;\n}\n\n/* Title spacing */\n.premium-upload-title,\n.upload-title {\n    font-size: 22px !important;\n    font-weight: 900 !important;\n    color: #17362e !important;\n    margin-bottom: 18px !important;\n}\n\n/* Remove fake duplicate helper if present */\n.premium-drop-helper {\n    display: none !important;\n}\n\n/* Keep upload component full width and stable */\n.single-green-file,\n.lab-single-green-file,\n.xray-single-green-file {\n    width: 100% !important;\n    max-width: 100% !important;\n    overflow: visible !important;\n    background: transparent !important;\n    border: 0 !important;\n    box-shadow: none !important;\n}\n\n/* Prevent Gradio internal wrappers from clipping */\n.single-green-file *,\n.lab-single-green-file *,\n.xray-single-green-file * {\n    box-sizing: border-box !important;\n}\n\n.single-green-file .wrap,\n.single-green-file .block,\n.single-green-file > div,\n.single-green-file div[data-testid="file"],\n.single-green-file div[data-testid="file-upload"] {\n    max-width: 100% !important;\n    overflow: visible !important;\n    background: transparent !important;\n    border: 0 !important;\n    box-shadow: none !important;\n}\n\n/* Main visible upload area */\n.single-green-file label,\n.single-green-file label[data-testid="file-upload-label"],\n.single-green-file [data-testid="file-upload-label"] {\n    width: 100% !important;\n    min-height: 190px !important;\n    border: 2px dashed rgba(15, 143, 104, 0.38) !important;\n    border-radius: 24px !important;\n    background:\n        radial-gradient(circle at 50% 30%, rgba(22, 163, 127, 0.14), transparent 30%),\n        linear-gradient(180deg, rgba(240, 253, 248, 0.97), #ffffff) !important;\n    display: flex !important;\n    flex-direction: column !important;\n    gap: 8px !important;\n    align-items: center !important;\n    justify-content: center !important;\n    text-align: center !important;\n    color: #08785d !important;\n    font-weight: 800 !important;\n    cursor: pointer !important;\n    padding: 30px 18px !important;\n    transition: all .25s ease !important;\n    overflow: hidden !important;\n}\n\n/* Hide native browser input */\n.single-green-file input[type="file"] {\n    opacity: 0 !important;\n    width: 0.1px !important;\n    height: 0.1px !important;\n    position: absolute !important;\n    overflow: hidden !important;\n    z-index: -1 !important;\n}\n.single-green-file input::file-selector-button {\n    display: none !important;\n}\n\n/* Hover polish */\n.single-green-file label:hover,\n.single-green-file label[data-testid="file-upload-label"]:hover,\n.single-green-file [data-testid="file-upload-label"]:hover {\n    border-color: #0f8f68 !important;\n    box-shadow: 0 18px 35px rgba(15, 143, 104, 0.12) !important;\n    transform: translateY(-2px) !important;\n}\n\n/* Cloud icon */\n.single-green-file label::before,\n.single-green-file [data-testid="file-upload-label"]::before {\n    content: "â˜";\n    width: 58px !important;\n    height: 58px !important;\n    min-width: 58px !important;\n    border-radius: 999px !important;\n    background: #dcf8ec !important;\n    color: #078f69 !important;\n    display: inline-flex !important;\n    align-items: center !important;\n    justify-content: center !important;\n    font-size: 30px !important;\n    margin: 0 0 8px 0 !important;\n    box-shadow: 0 10px 28px rgba(15, 143, 104, 0.14) !important;\n}\n\n/* Uploaded file preview must sit below the drop area, full width, not side-cut */\n.single-green-file .file-preview,\n.single-green-file [data-testid="file-preview"],\n.single-green-file .file,\n.single-green-file [data-testid="file"],\n.single-green-file .file-preview-holder {\n    width: 100% !important;\n    max-width: 100% !important;\n    margin-top: 14px !important;\n    background: #f8fffb !important;\n    border: 1px solid rgba(15, 143, 104, 0.18) !important;\n    border-radius: 16px !important;\n    padding: 12px 14px !important;\n    color: #176b56 !important;\n    overflow: hidden !important;\n    white-space: normal !important;\n}\n\n/* File name row: no horizontal scroll / no right cut */\n.single-green-file .file-preview *,\n.single-green-file [data-testid="file-preview"] *,\n.single-green-file .file * {\n    max-width: 100% !important;\n    overflow: hidden !important;\n    text-overflow: ellipsis !important;\n}\n\n/* Disable horizontal scrollbars inside file component */\n.single-green-file ::-webkit-scrollbar {\n    height: 0px !important;\n}\n\n/* Make small "File" button green/mint and not dominant */\n.single-green-file button,\n.single-green-file .upload-button,\n.single-green-file button[aria-label="Upload"] {\n    background: #e8f8f1 !important;\n    color: #08785d !important;\n    border: 1px solid rgba(15, 143, 104, 0.22) !important;\n    border-radius: 12px !important;\n    font-weight: 700 !important;\n}\n\n/* Strong green text */\n.single-green-file span,\n.single-green-file p,\n.single-green-file a {\n    color: #08785d !important;\n}\n\n/* Remove weird extra boxes caused by gradio default file wrapper */\n.single-green-file .empty,\n.single-green-file .upload-container {\n    min-height: auto !important;\n    height: auto !important;\n}\n\n/* Responsive */\n@media (max-width: 768px) {\n    .upload-card {\n        padding: 20px !important;\n        min-height: 300px !important;\n    }\n    .single-green-file label,\n    .single-green-file [data-testid="file-upload-label"] {\n        min-height: 170px !important;\n    }\n}\n'
+CUSTOM_CSS += '\n/* =========================================================\n   POLISHED LAB + XRAY UPLOAD LAYOUT FIX\n   Goal: clean single upload card, no cutting, no overflow.\n   Keeps Gradio upload logic untouched.\n   ========================================================= */\n\n/* Upload card should be tall enough and never clip content */\n.upload-card {\n    background: #ffffff !important;\n    border-radius: 28px !important;\n    border: 1px solid rgba(13, 116, 88, 0.12) !important;\n    box-shadow: 0 18px 45px rgba(18, 74, 61, 0.08) !important;\n    padding: 26px 28px 28px 28px !important;\n    overflow: visible !important;\n    min-height: 330px !important;\n}\n\n/* Title spacing */\n.premium-upload-title,\n.upload-title {\n    font-size: 22px !important;\n    font-weight: 900 !important;\n    color: #17362e !important;\n    margin-bottom: 18px !important;\n}\n\n/* Remove fake duplicate helper if present */\n.premium-drop-helper {\n    display: none !important;\n}\n\n/* Keep upload component full width and stable */\n.single-green-file,\n.lab-single-green-file,\n.xray-single-green-file {\n    width: 100% !important;\n    max-width: 100% !important;\n    overflow: visible !important;\n    background: transparent !important;\n    border: 0 !important;\n    box-shadow: none !important;\n}\n\n/* Prevent Gradio internal wrappers from clipping */\n.single-green-file *,\n.lab-single-green-file *,\n.xray-single-green-file * {\n    box-sizing: border-box !important;\n}\n\n.single-green-file .wrap,\n.single-green-file .block,\n.single-green-file > div,\n.single-green-file div[data-testid="file"],\n.single-green-file div[data-testid="file-upload"] {\n    max-width: 100% !important;\n    overflow: visible !important;\n    background: transparent !important;\n    border: 0 !important;\n    box-shadow: none !important;\n}\n\n/* Main visible upload area */\n.single-green-file label,\n.single-green-file label[data-testid="file-upload-label"],\n.single-green-file [data-testid="file-upload-label"] {\n    width: 100% !important;\n    min-height: 190px !important;\n    border: 2px dashed rgba(15, 143, 104, 0.38) !important;\n    border-radius: 24px !important;\n    background:\n        radial-gradient(circle at 50% 30%, rgba(22, 163, 127, 0.14), transparent 30%),\n        linear-gradient(180deg, rgba(240, 253, 248, 0.97), #ffffff) !important;\n    display: flex !important;\n    flex-direction: column !important;\n    gap: 8px !important;\n    align-items: center !important;\n    justify-content: center !important;\n    text-align: center !important;\n    color: #08785d !important;\n    font-weight: 800 !important;\n    cursor: pointer !important;\n    padding: 30px 18px !important;\n    transition: all .25s ease !important;\n    overflow: hidden !important;\n}\n\n/* Hide native browser input */\n.single-green-file input[type="file"] {\n    opacity: 0 !important;\n    width: 0.1px !important;\n    height: 0.1px !important;\n    position: absolute !important;\n    overflow: hidden !important;\n    z-index: -1 !important;\n}\n.single-green-file input::file-selector-button {\n    display: none !important;\n}\n\n/* Hover polish */\n.single-green-file label:hover,\n.single-green-file label[data-testid="file-upload-label"]:hover,\n.single-green-file [data-testid="file-upload-label"]:hover {\n    border-color: #0f8f68 !important;\n    box-shadow: 0 18px 35px rgba(15, 143, 104, 0.12) !important;\n    transform: translateY(-2px) !important;\n}\n\n/* Cloud icon */\n.single-green-file label::before,\n.single-green-file [data-testid="file-upload-label"]::before {\n    content: "";\n    width: 58px !important;\n    height: 58px !important;\n    min-width: 58px !important;\n    border-radius: 999px !important;\n    background: #dcf8ec !important;\n    color: #078f69 !important;\n    display: inline-flex !important;\n    align-items: center !important;\n    justify-content: center !important;\n    font-size: 30px !important;\n    margin: 0 0 8px 0 !important;\n    box-shadow: 0 10px 28px rgba(15, 143, 104, 0.14) !important;\n}\n\n/* Uploaded file preview must sit below the drop area, full width, not side-cut */\n.single-green-file .file-preview,\n.single-green-file [data-testid="file-preview"],\n.single-green-file .file,\n.single-green-file [data-testid="file"],\n.single-green-file .file-preview-holder {\n    width: 100% !important;\n    max-width: 100% !important;\n    margin-top: 14px !important;\n    background: #f8fffb !important;\n    border: 1px solid rgba(15, 143, 104, 0.18) !important;\n    border-radius: 16px !important;\n    padding: 12px 14px !important;\n    color: #176b56 !important;\n    overflow: hidden !important;\n    white-space: normal !important;\n}\n\n/* File name row: no horizontal scroll / no right cut */\n.single-green-file .file-preview *,\n.single-green-file [data-testid="file-preview"] *,\n.single-green-file .file * {\n    max-width: 100% !important;\n    overflow: hidden !important;\n    text-overflow: ellipsis !important;\n}\n\n/* Disable horizontal scrollbars inside file component */\n.single-green-file ::-webkit-scrollbar {\n    height: 0px !important;\n}\n\n/* Make small "File" button green/mint and not dominant */\n.single-green-file button,\n.single-green-file .upload-button,\n.single-green-file button[aria-label="Upload"] {\n    background: #e8f8f1 !important;\n    color: #08785d !important;\n    border: 1px solid rgba(15, 143, 104, 0.22) !important;\n    border-radius: 12px !important;\n    font-weight: 700 !important;\n}\n\n/* Strong green text */\n.single-green-file span,\n.single-green-file p,\n.single-green-file a {\n    color: #08785d !important;\n}\n\n/* Remove weird extra boxes caused by gradio default file wrapper */\n.single-green-file .empty,\n.single-green-file .upload-container {\n    min-height: auto !important;\n    height: auto !important;\n}\n\n/* Responsive */\n@media (max-width: 768px) {\n    .upload-card {\n        padding: 20px !important;\n        min-height: 300px !important;\n    }\n    .single-green-file label,\n    .single-green-file [data-testid="file-upload-label"] {\n        min-height: 170px !important;\n    }\n}\n'
 
 CUSTOM_CSS += '\n/* =========================================================\n   XRAY PREMIUM CHATBOT UI - open like Lab Report\n   ========================================================= */\n#xray-bottom-chat-btn,\n.assistant-open-btn {\n    display: none !important;\n}\n\n.xray-open-chat-shell {\n    margin-top: 18px !important;\n    margin-bottom: 12px !important;\n    background: linear-gradient(180deg, #f2fffa 0%, #ffffff 100%) !important;\n    border: 1px solid rgba(15,143,104,.16) !important;\n    border-radius: 28px !important;\n    box-shadow: 0 14px 34px rgba(18,74,61,.08) !important;\n}\n\n.xray-chatbot-box,\n.chatbot-box {\n    border-radius: 26px !important;\n    background: #ffffff !important;\n    border: 1px solid rgba(15,143,104,.13) !important;\n    box-shadow: 0 13px 32px rgba(18,74,61,.07) !important;\n    overflow: hidden !important;\n}\n\n.xray-chat-input-row {\n    margin-top: 10px !important;\n    align-items: stretch !important;\n}\n\n.xray-chat-input-row textarea {\n    min-height: 54px !important;\n    border-radius: 18px !important;\n    border: 1px solid rgba(15,143,104,.25) !important;\n    background: #ffffff !important;\n    box-shadow: inset 0 1px 0 rgba(15,143,104,.05) !important;\n}\n\n#xray-ask-btn {\n    background: linear-gradient(135deg, #0b8f68, #078457) !important;\n    color: #ffffff !important;\n    border: none !important;\n    border-radius: 18px !important;\n    font-size: 18px !important;\n    font-weight: 900 !important;\n    box-shadow: 0 12px 26px rgba(15,143,104,.24) !important;\n    transition: all .22s ease !important;\n}\n\n#xray-ask-btn:hover {\n    transform: translateY(-2px) !important;\n    box-shadow: 0 16px 32px rgba(15,143,104,.28) !important;\n}\n\n.xray-bottom-actions {\n    margin-top: 12px !important;\n}\n'
 CUSTOM_CSS += '\n/* =========================================================\n   VISIBLE REACTBITS EFFECTS - REAL MEDIBUDDY CLASSES\n   Directly targets actual notebook classes:\n   soft-card, saas-card, saas-widget, xray-preview-center, chat-main, upload-card.\n   ========================================================= */\n\n/* Global premium card glow */\n.soft-card,\n.saas-card,\n.saas-widget,\n.upload-card,\n.chat-main,\n.chat-history-card,\n.xray-preview-center,\n.assistant-dock,\n.premium-chat-shell,\n.xray-open-chat-shell,\n.health-card,\n.ai-card,\n.suggestion-card,\n.disclaimer-card,\n.info-card,\n.table-card {\n    position: relative !important;\n    overflow: visible !important;\n    border-radius: 26px !important;\n    border: 1px solid rgba(15, 143, 104, 0.16) !important;\n    background: linear-gradient(180deg, #ffffff 0%, #f6fffb 100%) !important;\n    box-shadow:\n        0 18px 46px rgba(18, 74, 61, 0.09),\n        inset 0 1px 0 rgba(255,255,255,0.95) !important;\n    transition:\n        transform .25s ease,\n        box-shadow .25s ease,\n        border-color .25s ease !important;\n}\n\n/* Animated BorderGlow */\n.soft-card::before,\n.saas-card::before,\n.saas-widget::before,\n.upload-card::before,\n.chat-main::before,\n.chat-history-card::before,\n.xray-preview-center::before,\n.assistant-dock::before,\n.premium-chat-shell::before,\n.xray-open-chat-shell::before,\n.health-card::before,\n.ai-card::before,\n.suggestion-card::before,\n.disclaimer-card::before,\n.info-card::before,\n.table-card::before {\n    content: "";\n    position: absolute;\n    inset: -2px;\n    border-radius: inherit;\n    padding: 2px;\n    background:\n        linear-gradient(120deg,\n            rgba(15,143,104,.10),\n            rgba(38,197,133,.65),\n            rgba(202,255,230,.70),\n            rgba(15,143,104,.16));\n    -webkit-mask:\n        linear-gradient(#fff 0 0) content-box,\n        linear-gradient(#fff 0 0);\n    -webkit-mask-composite: xor;\n    mask-composite: exclude;\n    pointer-events: none;\n    z-index: 0;\n    opacity: .55;\n    animation: medibuddyBorderGlow 5.5s linear infinite;\n}\n\n.soft-card > *,\n.saas-card > *,\n.saas-widget > *,\n.upload-card > *,\n.chat-main > *,\n.chat-history-card > *,\n.xray-preview-center > *,\n.assistant-dock > *,\n.premium-chat-shell > *,\n.xray-open-chat-shell > *,\n.health-card > *,\n.ai-card > *,\n.suggestion-card > *,\n.disclaimer-card > *,\n.info-card > *,\n.table-card > * {\n    position: relative !important;\n    z-index: 1 !important;\n}\n\n@keyframes medibuddyBorderGlow {\n    0% { opacity: .30; filter: hue-rotate(0deg); }\n    45% { opacity: .82; }\n    100% { opacity: .35; filter: hue-rotate(18deg); }\n}\n\n/* MagicBento hover feel */\n.soft-card:hover,\n.saas-card:hover,\n.saas-widget:hover,\n.upload-card:hover,\n.chat-main:hover,\n.chat-history-card:hover,\n.xray-preview-center:hover,\n.assistant-dock:hover,\n.premium-chat-shell:hover,\n.xray-open-chat-shell:hover {\n    transform: translateY(-4px) !important;\n    border-color: rgba(15,143,104,.34) !important;\n    box-shadow:\n        0 24px 60px rgba(18, 74, 61, 0.14),\n        0 0 32px rgba(15, 143, 104, 0.11) !important;\n}\n\n/* Warm glow only for attention / abnormal cards */\n.need-card,\n.abnormal-card,\n.alert-card,\n.needs-attention,\n.warning-card {\n    position: relative !important;\n    border-color: rgba(245, 158, 11, .28) !important;\n}\n.need-card::before,\n.abnormal-card::before,\n.alert-card::before,\n.needs-attention::before,\n.warning-card::before {\n    content:"";\n    position:absolute;\n    inset:-2px;\n    border-radius:inherit;\n    padding:2px;\n    background:linear-gradient(120deg,rgba(15,143,104,.12),rgba(245,158,11,.55),rgba(255,237,213,.78),rgba(15,143,104,.14));\n    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);\n    -webkit-mask-composite:xor;\n    mask-composite:exclude;\n    pointer-events:none;\n    animation:medibuddyBorderGlow 5.5s linear infinite;\n}\n\n/* X-ray preview should visibly glow */\n.xray-preview-center {\n    max-width: 850px !important;\n    margin-left: auto !important;\n    margin-right: auto !important;\n    padding: 26px !important;\n}\n.xray-preview-center::after {\n    content: "";\n    position: absolute;\n    inset: -16px;\n    border-radius: inherit;\n    background: radial-gradient(circle at 50% 50%, rgba(15,143,104,.23), transparent 66%);\n    filter: blur(18px);\n    opacity: .48;\n    pointer-events: none;\n    z-index: -1;\n}\n\n/* Chatbot visible premium glow */\n.chat-main,\n.chatbot-box,\n.xray-chatbot-box {\n    border-radius: 28px !important;\n    background: linear-gradient(180deg, #ffffff, #f7fffb) !important;\n}\n\n/* TextType look */\n.typewriter-line,\n.medibuddy-type,\n.ai-type-label {\n    color: #08785d !important;\n    font-weight: 900 !important;\n    display: inline-block !important;\n}\n.typewriter-line::after,\n.medibuddy-type::after,\n.ai-type-label::after {\n    content: "|";\n    margin-left: 4px;\n    color: #0fa878;\n    animation: medibuddyBlink .75s steps(1) infinite;\n}\n@keyframes medibuddyBlink { 0%,50%{opacity:1} 51%,100%{opacity:0} }\n\n/* Text pop/jump */\n.jump-text,\n.saas-card-title em,\n.assistant-chip,\n.quick-q {\n    animation: medibuddyPop .95s ease both;\n}\n@keyframes medibuddyPop {\n    0% { opacity: 0; transform: translateY(8px) scale(.96); }\n    65% { opacity: 1; transform: translateY(-2px) scale(1.04); }\n    100% { opacity: 1; transform: translateY(0) scale(1); }\n}\n\n/* ImageTrail-style welcome background accent */\n.welcome-hero,\n.welcome-card,\n.hero-card,\n.hero-section {\n    position: relative !important;\n    overflow: hidden !important;\n}\n.welcome-hero::after,\n.welcome-card::after,\n.hero-card::after,\n.hero-section::after {\n    content: "";\n    position: absolute;\n    width: 450px;\n    height: 450px;\n    right: -160px;\n    top: -180px;\n    border-radius: 999px;\n    background: radial-gradient(circle, rgba(15,143,104,.22), rgba(15,143,104,.08) 34%, transparent 70%);\n    animation: medibuddyTrail 8s ease-in-out infinite;\n    pointer-events: none;\n}\n@keyframes medibuddyTrail {\n    0%, 100% { transform: translate3d(0,0,0) scale(1); }\n    50% { transform: translate3d(26px,18px,0) scale(1.08); }\n}\n\n/* Upload card clearer glow */\n.single-green-file label,\n.single-green-file [data-testid="file-upload-label"] {\n    box-shadow:\n        inset 0 0 0 1px rgba(15,143,104,.08),\n        0 12px 30px rgba(15,143,104,.08) !important;\n}\n\n/* Bento layout polish on existing grids */\n.saas-widget-grid,\n.saas-two-col,\n.lab-grid,\n.result-grid {\n    gap: 18px !important;\n}\n\n@media (prefers-reduced-motion: reduce) {\n    .soft-card::before,\n    .saas-card::before,\n    .saas-widget::before,\n    .upload-card::before,\n    .chat-main::before,\n    .xray-preview-center::before,\n    .welcome-card::after,\n    .welcome-hero::after,\n    .jump-text {\n        animation: none !important;\n    }\n}\n'
@@ -10804,7 +10804,7 @@ CUSTOM_CSS += '\n/* =========================================================\n 
 CUSTOM_CSS += """
 /* =========================================================
    FINISH BUTTON NAVIGATION
-   Finish returns the user directly to Page 1 Â· Welcome.
+   Finish returns the user directly to Page 1  Welcome.
    ========================================================= */
 .finish-btn,
 #choose-finish-btn,
@@ -11243,7 +11243,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
         gr.HTML("""
         <div class="top-nav">
             <div class="logo-wrap">
-                <div class="logo-icon">ðŸ§¬</div>
+                <div class="logo-icon"></div>
                 <div class="logo-text">MediBuddy <span>AI</span></div>
             </div>
         </div>
@@ -11379,13 +11379,13 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
         """)
 
         with gr.Tabs(selected="welcome") as main_tabs:
-            with gr.Tab("Page 1 Â· Welcome", id="welcome"):
+            with gr.Tab("Page 1  Welcome", id="welcome"):
                 gr.HTML("""
                 <div class="welcome-animated">
                   <div class="welcome-landing">
                     <div class="welcome-mini-nav">
-                      <div class="welcome-brand"><span class="welcome-brand-mark">âœš</span> MediBuddy AI</div>
-                      <div class="welcome-secure-tag">ðŸ”’ Private &amp; Secure</div>
+                      <div class="welcome-brand"><span class="welcome-brand-mark"></span> MediBuddy AI</div>
+                      <div class="welcome-secure-tag"> Private &amp; Secure</div>
                     </div>
 
                     <div class="landing-hero">
@@ -11394,20 +11394,20 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         <h1 class="landing-title">Understand your<br><span class="highlight">medical report</span><br>in simple words.</h1>
                         <p class="landing-copy">Upload your lab results or medical documents. MediBuddy instantly translates complex medical jargon into clear, reassuring insights you can actually understand.</p>
                         <div class="welcome-actions">
-                          <div class="welcome-action-chip">â—Ž 100% Educational</div>
-                          <div class="welcome-action-chip">ðŸ”’ Private</div>
+                          <div class="welcome-action-chip"> 100% Educational</div>
+                          <div class="welcome-action-chip"> Private</div>
                         </div>
                       </div>
 
                       <div class="welcome-visual-card welcome-orbit-visual">
                         <div class="medical-orbit">
-                          <div class="orbit-icon">ðŸ§ª</div>
-                          <div class="orbit-icon">ðŸ©»</div>
-                          <div class="orbit-icon">ðŸ“‹</div>
-                          <div class="orbit-icon">â¤ï¸</div>
+                          <div class="orbit-icon"></div>
+                          <div class="orbit-icon"></div>
+                          <div class="orbit-icon"></div>
+                          <div class="orbit-icon"></div>
                         </div>
                         <div class="center-assistant">
-                          <div class="assistant-face">ðŸ¤–</div>
+                          <div class="assistant-face"></div>
                           <b>MediBuddy AI</b>
                           <span>Report assistant ready</span>
                         </div>
@@ -11438,18 +11438,18 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                       <div>
                         <h3 class="landing-section-title">Why MediBuddy?</h3>
                         <div class="why-grid">
-                          <div class="why-card"><div class="why-icon">ðŸ“„</div><b>Clean Report Reading</b><span>Accurate text extraction from complex PDFs.</span></div>
-                          <div class="why-card"><div class="why-icon">ðŸ“Š</div><b>Visual Health Insights</b><span>See your results in clean, easy-to-read charts.</span></div>
-                          <div class="why-card"><div class="why-icon">ðŸ¤–</div><b>Smart AI Assistant</b><span>Ask questions about your results safely.</span></div>
-                          <div class="why-card"><div class="why-icon">â¬‡ï¸</div><b>Downloadable PDF</b><span>Save your simplified summary for later.</span></div>
+                          <div class="why-card"><div class="why-icon"></div><b>Clean Report Reading</b><span>Accurate text extraction from complex PDFs.</span></div>
+                          <div class="why-card"><div class="why-icon"></div><b>Visual Health Insights</b><span>See your results in clean, easy-to-read charts.</span></div>
+                          <div class="why-card"><div class="why-icon"></div><b>Smart AI Assistant</b><span>Ask questions about your results safely.</span></div>
+                          <div class="why-card"><div class="why-icon"></div><b>Downloadable PDF</b><span>Save your simplified summary for later.</span></div>
                         </div>
                       </div>
                     </div>
 
                     <div class="landing-footer">
-                      <span>ðŸ”’ Private &amp; Secure</span>
-                      <span>ðŸŒ¿ Educational Use Only</span>
-                      <span>âš• Step-by-step Guidance</span>
+                      <span> Private &amp; Secure</span>
+                      <span> Educational Use Only</span>
+                      <span> Step-by-step Guidance</span>
                     </div>
                   </div>
                 </div>
@@ -11461,15 +11461,15 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         variant="primary",
                         elem_id="get-started-btn"
                     )
-                    gr.HTML('<span class="secure-line">100% educational Â· private Â· easy to use</span>')
+                    gr.HTML('<span class="secure-line">100% educational  private  easy to use</span>')
 
-            with gr.Tab("Page 2 Â· Choose Option", id="choose"):
+            with gr.Tab("Page 2  Choose Option", id="choose"):
                 gr.HTML("""
                 <div class="choose-page-v2">
                     <div class="choose-progress-v2">
                         <div class="choose-progress-line"></div>
                         <div class="choose-progress-item done">
-                            <div class="choose-progress-dot">âœ“</div>
+                            <div class="choose-progress-dot"></div>
                             <span>Welcome</span>
                         </div>
                         <div class="choose-progress-item active">
@@ -11485,16 +11485,16 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                 """)
 
                 with gr.Row(elem_classes=["choose-back-row-v2"]):
-                    back_to_welcome_btn = gr.Button("â† Go back", elem_id="back-to-welcome-btn", elem_classes=["choose-back-btn-v2"])
+                    back_to_welcome_btn = gr.Button(" Go back", elem_id="back-to-welcome-btn", elem_classes=["choose-back-btn-v2"])
 
                 gr.HTML("""
                 <div class="choose-copy-v2">
-                    <div class="choose-kicker-v2">STEP 2 OF 3 â€” CHOOSE YOUR REPORT TYPE</div>
+                    <div class="choose-kicker-v2">STEP 2 OF 3  CHOOSE YOUR REPORT TYPE</div>
                     <h2>Which report would you like<br>us to decode?</h2>
-                    <p>Pick your report type â€” weâ€™ll open the right page instantly<br>and guide you through every step.</p>
+                    <p>Pick your report type  well open the right page instantly<br>and guide you through every step.</p>
                     <div class="choose-info-v2">
-                        <span>âŒ˜</span>
-                        <b>Youâ€™re one tap away.</b> The correct upload page opens the moment you choose.
+                        <span></span>
+                        <b>Youre one tap away.</b> The correct upload page opens the moment you choose.
                     </div>
                 </div>
                 """)
@@ -11502,41 +11502,41 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                 with gr.Row(elem_classes=["choice-grid-v2"]):
                     with gr.Column(elem_classes=["choice-card-v2 choice-lab-v2"]):
                         gr.HTML("""
-                        <div class="choice-icon-v2 lab-icon-v2">âš—</div>
+                        <div class="choice-icon-v2 lab-icon-v2"></div>
                         <h3>Lab Report</h3>
-                        <p>CBC, LFT, KFT, thyroid, lipid panel, urine â€” if it came from a lab, we can make it clear.</p>
+                        <p>CBC, LFT, KFT, thyroid, lipid panel, urine  if it came from a lab, we can make it clear.</p>
                         """)
-                        choice_lab_btn = gr.Button("Start with Lab Report â†’", variant="primary", elem_id="choice-lab-btn")
+                        choice_lab_btn = gr.Button("Start with Lab Report ", variant="primary", elem_id="choice-lab-btn")
 
                     with gr.Column(elem_classes=["choice-card-v2 choice-xray-v2"]):
                         gr.HTML("""
-                        <div class="choice-icon-v2 xray-icon-v2">âŒ—</div>
+                        <div class="choice-icon-v2 xray-icon-v2"></div>
                         <h3>X-ray Imaging</h3>
-                        <p>Upload your X-ray and weâ€™ll translate the findings into plain, reassuring language.</p>
+                        <p>Upload your X-ray and well translate the findings into plain, reassuring language.</p>
                         """)
-                        choice_xray_btn = gr.Button("Start with X-ray â†’", variant="primary", elem_id="choice-xray-btn")
+                        choice_xray_btn = gr.Button("Start with X-ray ", variant="primary", elem_id="choice-xray-btn")
 
                     with gr.Column(elem_classes=["choice-card-v2 choice-compare-v2"]):
                         gr.HTML("""
-                        <div class="choice-icon-v2">ðŸ“Š</div>
+                        <div class="choice-icon-v2"></div>
                         <h3>Compare Reports</h3>
                         <p>Compare previous and current lab reports, or view X-ray history side by side.</p>
                         """)
-                        choice_compare_btn = gr.Button("Open Dashboard â†’", variant="primary", elem_id="choice-compare-btn")
+                        choice_compare_btn = gr.Button("Open Dashboard ", variant="primary", elem_id="choice-compare-btn")
 
                 gr.HTML("""
                 <div class="choose-mini-steps-v2">
                     <div class="mini-step active"><b>1</b><span>Choose</span><small>Pick your type</small></div>
-                    <em>â€º</em>
+                    <em></em>
                     <div class="mini-step"><b>2</b><span>Upload</span><small>One easy upload</small></div>
-                    <em>â€º</em>
+                    <em></em>
                     <div class="mini-step"><b>3</b><span>Analyze</span><small>AI reads it for you</small></div>
-                    <em>â€º</em>
+                    <em></em>
                     <div class="mini-step"><b>4</b><span>Understand</span><small>Crystal-clear results</small></div>
                 </div>
                 """)
 
-            with gr.Tab("Page 3 Â· Lab Report Result", id="lab_result"):
+            with gr.Tab("Page 3  Lab Report Result", id="lab_result"):
                 gr.HTML(render_step_progress(3, "Lab report analysis"))
                 # Top navigation buttons removed for cleaner flow. The user continues naturally,
                 # then uses the bottom Back button after reviewing the result and chatbot.
@@ -11544,7 +11544,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                     with gr.Column(scale=3, elem_classes=["upload-card"]):
                         gr.HTML("""
                         <div class="upload-section-head ref-upload-head">
-                            <div class="upload-head-icon">ðŸ“„</div>
+                            <div class="upload-head-icon"></div>
                             <div>
                                 <div class="upload-title premium-upload-title">Upload Medical Report</div>
                                 <div class="upload-subtitle">Upload your lab report to get AI-powered insights and analysis.</div>
@@ -11561,7 +11561,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         lab_uploaded_file_info = gr.HTML(value="", visible=False, elem_classes=["uploaded-file-inline"])
                         gr.HTML("""
                         <div class="upload-secure-strip">
-                            <span>ðŸ›¡</span>
+                            <span></span>
                             <div><b>Your data is secure and private</b><small>We keep your uploaded report inside this local project workflow.</small></div>
                         </div>
                         """)
@@ -11569,12 +11569,12 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         gr.HTML("""
                         <div class="action-panel-ref">
                             <div class="action-title-ref">Action</div>
-                            <div class="action-illustration-ref">ðŸ“Š</div>
+                            <div class="action-illustration-ref"></div>
                             <h3>Analyze Lab Report</h3>
                             <p>Our AI will analyze your report and provide detailed insights.</p>
                         </div>
                         """)
-                        lab_analyze_btn = gr.Button("âœ¨ Analyze Lab Report", variant="primary", elem_id="lab-analyze-btn")
+                        lab_analyze_btn = gr.Button(" Analyze Lab Report", variant="primary", elem_id="lab-analyze-btn")
                         pdf_file_out = gr.File(label="Download Report", elem_id="pdf-download", visible=False)
                         lab_clear_file_btn = gr.Button("Remove / Re-upload Report", elem_id="lab-clear-file-btn", elem_classes=["remove-file-btn"], visible=False)
 
@@ -11591,7 +11591,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                 gr.HTML("""
                 <div class="assistant-dock premium-chat-shell" id="lab-ai-assistant">
                     <div class="assistant-hero">
-                        <div class="assistant-avatar pulse-soft">ðŸ¤–</div>
+                        <div class="assistant-avatar pulse-soft"></div>
                         <div>
                             <div class="saas-kicker">Smart AI assistant</div>
                             <h2>MediBuddy AI Assistant</h2>
@@ -11599,10 +11599,10 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         </div>
                     </div>
                     <div class="assistant-prompt-chips">
-                        <span class="assistant-chip">ðŸ’š Is my report normal?</span>
-                        <span class="assistant-chip">ðŸ“Š Explain abnormal values</span>
-                        <span class="assistant-chip">â” What should I do next?</span>
-                        <span class="assistant-chip">â–¦ Create a simple table</span>
+                        <span class="assistant-chip"> Is my report normal?</span>
+                        <span class="assistant-chip"> Explain abnormal values</span>
+                        <span class="assistant-chip"> What should I do next?</span>
+                        <span class="assistant-chip"> Create a simple table</span>
                     </div>
                 </div>
                 """)
@@ -11626,9 +11626,9 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         scale=6,
                         lines=1
                     )
-                    lab_ask_btn = gr.Button("âž¤", scale=1, min_width=70, elem_id="lab-ask-btn")
+                    lab_ask_btn = gr.Button("", scale=1, min_width=70, elem_id="lab-ask-btn")
                 with gr.Row(elem_classes=["bottom-action-row"]):
-                    lab_back_btn = gr.Button("â† Back to Options", elem_id="lab-bottom-back-btn", elem_classes=["back-btn"])
+                    lab_back_btn = gr.Button(" Back to Options", elem_id="lab-bottom-back-btn", elem_classes=["back-btn"])
                     lab_finish_btn = gr.Button("Finish", elem_id="lab-finish-btn", elem_classes=["finish-btn"])
 
                 # Hidden developer outputs required by the existing backend callback.
@@ -11644,13 +11644,13 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                 raw_json_out = gr.Code(language="json", visible=False)
                 json_file_out = gr.File(visible=False)
 
-            with gr.Tab("Page 4 Â· X-ray Result", id="xray_result"):
+            with gr.Tab("Page 4  X-ray Result", id="xray_result"):
                 gr.HTML(render_step_progress(3, "X-ray analysis"))
                 with gr.Row(equal_height=False):
                     with gr.Column(scale=3, elem_classes=["upload-card", "single-upload-card", "xray-upload-only"]):
                         gr.HTML("""
                         <div class="upload-section-head ref-upload-head">
-                            <div class="upload-head-icon">ðŸ©»</div>
+                            <div class="upload-head-icon"></div>
                             <div>
                                 <div class="upload-title premium-upload-title">Upload X-ray Image</div>
                                 <div class="upload-subtitle">Upload your X-ray image to get an AI-powered educational visual summary.</div>
@@ -11674,7 +11674,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         xray_uploaded_file_info = gr.HTML(value="", visible=False, elem_classes=["uploaded-file-inline"])
                         gr.HTML("""
                         <div class="upload-secure-strip">
-                            <span>ðŸ›¡</span>
+                            <span></span>
                             <div><b>Your X-ray image stays private</b><small>Use this as educational support, not a confirmed diagnosis.</small></div>
                         </div>
                         """)
@@ -11682,12 +11682,12 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         gr.HTML("""
                         <div class="action-panel-ref">
                             <div class="action-title-ref">Action</div>
-                            <div class="action-illustration-ref">ðŸ©»</div>
+                            <div class="action-illustration-ref"></div>
                             <h3>Analyze X-ray</h3>
                             <p>Our AI will review your X-ray image and create a simple educational summary.</p>
                         </div>
                         """)
-                        xray_analyze_btn = gr.Button("âœ¨ Analyze X-ray", variant="primary", elem_id="xray-analyze-btn")
+                        xray_analyze_btn = gr.Button(" Analyze X-ray", variant="primary", elem_id="xray-analyze-btn")
                         xray_pdf_file = gr.File(label="Download Report", elem_id="xray-pdf-download", visible=False)
                         xray_clear_file_btn = gr.Button("Remove / Re-upload Report", elem_id="xray-clear-file-btn", elem_classes=["remove-file-btn"], visible=False)
                         gr.HTML("""
@@ -11723,7 +11723,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                 gr.HTML("""
                 <div class="assistant-dock premium-chat-shell xray-open-chat-shell" id="xray-ai-assistant-preview">
                     <div class="assistant-hero">
-                        <div class="assistant-avatar pulse-soft">ðŸ¤–</div>
+                        <div class="assistant-avatar pulse-soft"></div>
                         <div>
                             <div class="saas-kicker">Radiology AI assistant</div>
                             <h2>MediBuddy AI Assistant</h2>
@@ -11731,10 +11731,10 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         </div>
                     </div>
                     <div class="assistant-prompt-chips">
-                        <span class="assistant-chip">ðŸ’š Is this serious?</span>
-                        <span class="assistant-chip">ðŸ¦´ Explain the finding</span>
-                        <span class="assistant-chip">â” What should I do next?</span>
-                        <span class="assistant-chip">â–¦ Create a simple table</span>
+                        <span class="assistant-chip"> Is this serious?</span>
+                        <span class="assistant-chip"> Explain the finding</span>
+                        <span class="assistant-chip"> What should I do next?</span>
+                        <span class="assistant-chip"> Create a simple table</span>
                     </div>
                 </div>
                 """)
@@ -11751,18 +11751,18 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         scale=6,
                         lines=1
                     )
-                    xray_ask_btn = gr.Button("âž¤", scale=1, min_width=70, elem_id="xray-ask-btn")
+                    xray_ask_btn = gr.Button("", scale=1, min_width=70, elem_id="xray-ask-btn")
                 with gr.Row(elem_classes=["bottom-action-row", "xray-bottom-actions"]):
-                    xray_back_btn = gr.Button("â† Back to Options", elem_id="xray-bottom-back-btn", elem_classes=["back-btn"])
+                    xray_back_btn = gr.Button(" Back to Options", elem_id="xray-bottom-back-btn", elem_classes=["back-btn"])
                     xray_finish_btn = gr.Button("Finish", elem_id="xray-finish-btn", elem_classes=["finish-btn"])
-                    xray_chat_btn = gr.Button("ðŸ’¬ Open MediBuddy AI Assistant", visible=False, elem_id="xray-bottom-chat-btn", elem_classes=["assistant-open-btn"])
+                    xray_chat_btn = gr.Button(" Open MediBuddy AI Assistant", visible=False, elem_id="xray-bottom-chat-btn", elem_classes=["assistant-open-btn"])
 
                 xray_text_hidden = gr.Markdown(visible=False)
 
-            with gr.Tab("Page 5 Â· AI Chatbot", id="ai_chat"):
+            with gr.Tab("Page 5  AI Chatbot", id="ai_chat"):
                 gr.HTML(render_step_progress(3, "AI Assistant"))
                 with gr.Row(elem_classes=["page-action-row"]):
-                    chat_back_btn = gr.Button("â† Back to Options", elem_id="chat-back-btn", elem_classes=["back-btn"])
+                    chat_back_btn = gr.Button(" Back to Options", elem_id="chat-back-btn", elem_classes=["back-btn"])
                     chat_finish_btn = gr.Button("Finish", elem_id="chat-finish-btn", elem_classes=["finish-btn"])
                 gr.HTML("""
                 <div class="section-heading">
@@ -11798,9 +11798,9 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                                 scale=6,
                                 lines=1
                             )
-                            ask_btn = gr.Button("âž¤", scale=1, min_width=70, elem_id="ask-btn")
+                            ask_btn = gr.Button("", scale=1, min_width=70, elem_id="ask-btn")
 
-            with gr.Tab("Page 6 Â· Comparison Dashboard", id="comparison"):
+            with gr.Tab("Page 6  Comparison Dashboard", id="comparison"):
                 gr.HTML(render_step_progress(3, "Health progress comparison"))
 
                 with gr.Column(elem_id="comparison-dashboard-inner", elem_classes=["comparison-dashboard-inner"]):
@@ -11833,13 +11833,13 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
                         """)
 
                 with gr.Row(elem_classes=["bottom-action-row", "comparison-bottom-actions"]):
-                    comparison_back_btn = gr.Button("â† Back to Options", elem_id="comparison-back-btn", elem_classes=["back-btn"])
-                    comparison_choices_bottom_btn = gr.Button("â† Comparison Choices", elem_id="comparison-choices-bottom-btn", elem_classes=["back-btn", "comparison-middle-btn"])
+                    comparison_back_btn = gr.Button(" Back to Options", elem_id="comparison-back-btn", elem_classes=["back-btn"])
+                    comparison_choices_bottom_btn = gr.Button(" Comparison Choices", elem_id="comparison-choices-bottom-btn", elem_classes=["back-btn", "comparison-middle-btn"])
                     comparison_finish_btn = gr.Button("Finish", elem_id="comparison-finish-btn", elem_classes=["finish-btn"])
 
         gr.HTML("""
         <div class="app-footer">
-            <div class="footer-subtext">MediBuddy AI Â· Smart Medical Report Assistant Â· Educational Use Only Â· Building Smart Solutions for a Better Digital Future â€” Pinky</div>
+            <div class="footer-subtext">MediBuddy AI  Smart Medical Report Assistant  Educational Use Only  Building Smart Solutions for a Better Digital Future  Pinky</div>
         </div>
         """)
 
@@ -11900,7 +11900,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
         js=nav_loading_js,
     )
 
-    # Finish buttons: exit the current workflow and return directly to Page 1 Â· Welcome.
+    # Finish buttons: exit the current workflow and return directly to Page 1  Welcome.
     for finish_btn in [lab_finish_btn, xray_finish_btn, chat_finish_btn, comparison_finish_btn]:
         finish_btn.click(
             fn=go_back_to_welcome_page,
