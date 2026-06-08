@@ -263,8 +263,8 @@ STRUCTURED_BLOCKLIST_WORDS = {
 }
 
 MEDICAL_UNIT_REGEX = re.compile(
-  r"^(?:g/dl|gm/dl|mg/dl|mmol/l|meq/l|iu/l|u/l|pg|fl|%|x10\^?\d+/?(?:l|ul|l|ml)?|x10\^?\d+|10\^?\d+/?(?:l|ul|l|ml)?|10\*\d+/?(?:l|ul|l|ml)?|cells/?(?:cmm|ul|l|ml)|/hpf|/lpf|ng/ml|pg/ml|miu/l|iu/ml|u/ml|?g/dl|?mol/l|mm/hr|ratio|sec|seconds?)$",
-  flags=re.IGNORECASE,
+    r"^(?P<value>[0-9]+(?:\.[0-9]+)?)\s*(?P<unit>[A-Za-z0-9/%_.-]+)$",
+    flags=re.IGNORECASE,
 )
 
 GENERAL_MEDICAL_PARAM_PATTERNS = [
