@@ -1,10 +1,8 @@
-gradio
-groq
-opencv-python-headless
-numpy
-pandas
-pillow
-matplotlib
-python-dotenv
+pytesseract
+pdf2image
 PyMuPDF
-reportlab
+opencv-python-headless
+pillow
+python-dotenv
+groq
+easyocr
