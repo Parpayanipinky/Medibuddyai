@@ -1,8 +1,10 @@
-pytesseract
-pdf2image
-PyMuPDF
-opencv-python-headless
-pillow
-python-dotenv
+gradio
 groq
-easyocr
+opencv-python-headless
+numpy
+pandas
+pillow
+matplotlib
+python-dotenv
+PyMuPDF
+reportlab
