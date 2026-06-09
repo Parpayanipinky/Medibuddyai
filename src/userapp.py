@@ -44,20 +44,11 @@ def _load_local_env_file():
 
 _load_local_env_file()
 
-# Repair sympy in the active runtime if needed before importing easyocr/torch.
+# Sympy is installed from requirements.txt. Do not run pip install at app startup.
 try:
     import sympy
-    if not hasattr(sympy, "core"):
-        raise AttributeError("sympy.core missing")
 except Exception:
-    subprocess.run(
-        [sys.executable, "-m", "pip", "install", "-q", "--no-cache-dir", "--force-reinstall", "sympy==1.13.1", "mpmath==1.3.0"],
-        check=True,
-    )
-    importlib.invalidate_caches()
-    for mod in [m for m in list(sys.modules) if m.startswith("sympy")]:
-        del sys.modules[mod]
-    import sympy
+    sympy = None
 
 import cv2
 import numpy as np
@@ -73,6 +64,12 @@ try:
     import pytesseract
 except Exception:
     pytesseract = None
+
+if pytesseract is not None and os.name == "nt":
+    tesseract_exe = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    if os.path.exists(tesseract_exe):
+        pytesseract.pytesseract.tesseract_cmd = tesseract_exe
+        print("Tesseract connected:", tesseract_exe)
 
 from PIL import Image
 from groq import Groq

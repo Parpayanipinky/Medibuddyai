@@ -278,7 +278,7 @@ def _medical_text_confidence_score(text: str) -> int:
         'ultrasound', 'prescription', 'medicine', 'diagnosis', 'clinical', 'blood', 'serum'
     ]
     score = sum(1 for term in medical_terms if term in text)
-    score += min(5, len(re.findall(r'\d+(?:\.\d+)?\s*[-â€“]\s*\d+(?:\.\d+)?', text)))
+    score += min(5, len(re.findall(r'\d+(?:\.\d+)?\s*[-–]\s*\d+(?:\.\d+)?', text)))
     score += min(5, len(re.findall(r'\d+(?:\.\d+)?\s*(?:mg/dl|g/dl|mmol/l|u/l|iu/l|%|fl|pg|ng/ml|x10)', text, flags=re.I)))
     return score
 
@@ -450,7 +450,7 @@ def _xray_body_areas_conflict(previous_area: Any, current_area: Any) -> bool:
 def _validate_xray_pair_with_vision(previous_xray: Any, current_xray: Any) -> Dict[str, Any] | None:
     """Validate X-ray images using Groq vision. Returns JSON dict or None."""
     if _groq_vision_client is None:
-        # No vision client â€“ skip strict validation, let local scorer decide
+        # No vision client – skip strict validation, let local scorer decide
         return None
 
     previous_data_url = _image_file_to_data_url(previous_xray)
@@ -560,7 +560,7 @@ def extract_text_from_file(uploaded_file: Any) -> str:
 
 def _parse_reference_range_from_text(text: str, fallback: Tuple[float | None, float | None]) -> Tuple[float | None, float | None]:
     ref_patterns = [
-        r"(\d+(?:\.\d+)?)\s*[-â€“â€”]\s*(\d+(?:\.\d+)?)",
+        r"(\d+(?:\.\d+)?)\s*[-–—]\s*(\d+(?:\.\d+)?)",
         r"(\d+(?:\.\d+)?)\s+to\s+(\d+(?:\.\d+)?)",
     ]
     for pattern in ref_patterns:
@@ -645,7 +645,7 @@ def parse_lab_values_from_text(text: str) -> Dict[str, Dict[str, Any]]:
             # crude unit detection immediately after first numeric value
             unit = ""
             after_value = clean[clean.find(nums[0]) + len(nums[0]):].strip()
-            unit_match = re.match(r"([A-Za-zÂµÎ¼%/^0-9.]+)", after_value)
+            unit_match = re.match(r"([A-Za-zµμ%/^0-9.]+)", after_value)
             if unit_match:
                 unit = unit_match.group(1)
 
@@ -711,7 +711,7 @@ def get_saved_report_choices() -> List[Tuple[str, str]]:
     for path in sorted(SNAPSHOT_DIR.glob("*.json"), reverse=True):
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
-            label = f"{data.get('created_at', '')} Â· {data.get('file_name', 'Saved report')} Â· {data.get('report_subtype', 'Lab')}"
+            label = f"{data.get('created_at', '')} · {data.get('file_name', 'Saved report')} · {data.get('report_subtype', 'Lab')}"
             choices.append((label, str(path)))
         except Exception:
             continue
@@ -858,9 +858,9 @@ def _technical_lab_points(comparisons: List[Dict[str, Any]]) -> Dict[str, List[s
 
     for item in comparisons:
         line = (
-            f"{item['parameter']}: {item['previous']} â†’ {item['current']} {item.get('unit', '')} "
+            f"{item['parameter']}: {item['previous']} → {item['current']} {item.get('unit', '')} "
             f"({item['direction']}, Î” {item['difference']}, {item['percentage_change']}); "
-            f"status {item['previous_status']} â†’ {item['current_status']}. "
+            f"status {item['previous_status']} → {item['current_status']}. "
             f"{item['clinical_interpretation']}"
         )
 
@@ -972,10 +972,10 @@ def _comparison_html(result: Dict[str, Any], title: str) -> str:
         </section>
         """
 
-    abnormal_card = section_card("Abnormal / Worsened Parameters", "âš ï¸", sections["abnormal_or_worse"], "attention")
-    improved_card = section_card("Improved / Normalized Parameters", "âœ…", sections["improved"], "improved")
-    stable_card = section_card("Stable Parameters", "âž–", sections["stable"], "stable")
-    doctor_card = section_card("Suggested Doctor Discussion Points", "ðŸ©º", sections["doctor_points"], "doctor")
+    abnormal_card = section_card("Abnormal / Worsened Parameters", "⚠️", sections["abnormal_or_worse"], "attention")
+    improved_card = section_card("Improved / Normalized Parameters", "✅", sections["improved"], "improved")
+    stable_card = section_card("Stable Parameters", "➖", sections["stable"], "stable")
+    doctor_card = section_card("Suggested Doctor Discussion Points", "🩺", sections["doctor_points"], "doctor")
 
     return f"""
     <style>
@@ -1221,7 +1221,7 @@ def _comparison_html(result: Dict[str, Any], title: str) -> str:
           {stable_card}
           {doctor_card}
         </div>
-        <div class="quote-box">ðŸŒ¿ {quote}</div>
+        <div class="quote-box">🌿 {quote}</div>
       </div>
 
       <div class="compare-card" style="margin-top:16px;">
@@ -1380,7 +1380,7 @@ def export_lab_comparison_pdf(result: Dict[str, Any], title: str = "Technical La
 
     def bullet_text(items: List[str], limit: int = 10) -> str:
         selected = items[:limit] if items else ["No item was detected from the matched values."]
-        return "<br/>".join(f"â€¢ {esc_text(item)}" for item in selected)
+        return "<br/>".join(f"• {esc_text(item)}" for item in selected)
 
     def add_key_value_table(rows: List[Tuple[str, Any]], columns: int = 4) -> None:
         cells = []
@@ -1426,7 +1426,7 @@ def export_lab_comparison_pdf(result: Dict[str, Any], title: str = "Technical La
         story.append(Spacer(1, 7))
 
     story.append(_p(title, styles["title"]))
-    story.append(_p("Professional comparison summary Â· Educational support only Â· Not a confirmed diagnosis", styles["subtitle"]))
+    story.append(_p("Professional comparison summary · Educational support only · Not a confirmed diagnosis", styles["subtitle"]))
 
     add_key_value_table([
         ("Generated", datetime.now().strftime("%Y-%m-%d %H:%M")),
@@ -1817,7 +1817,7 @@ def build_comparison_dashboard_landing_html() -> str:
 
     <div class="mb-reference-page">
       <div class="mb-reference-header">
-        <div class="mb-ref-kicker">Step 3 of 3 Â· Compare Progress</div>
+        <div class="mb-ref-kicker">Step 3 of 3 · Compare Progress</div>
         <h1 class="mb-ref-title">What would you like<br/>to <span>compare?</span></h1>
         <p class="mb-ref-subtitle">
           Choose a comparison mode below. You can use saved reports, upload two reports
@@ -1825,42 +1825,42 @@ def build_comparison_dashboard_landing_html() -> str:
         </p>
 
         <div class="mb-ref-tip">
-          <div class="mb-ref-tip-icon">ðŸ’¡</div>
-          <div>Youâ€™re one tap away. Open an option below and compare your health progress.</div>
+          <div class="mb-ref-tip-icon">💡</div>
+          <div>You’re one tap away. Open an option below and compare your health progress.</div>
         </div>
       </div>
 
       <div class="mb-ref-cards">
         <div class="mb-ref-card" onclick="document.querySelector('#open-saved-compare-btn button, #open-saved-compare-btn')?.click()">
-          <div class="mb-ref-icon green">ðŸ“</div>
+          <div class="mb-ref-icon green">📁</div>
           <div class="mb-ref-badge green">Saved History</div>
           <h3>Saved + Current</h3>
           <p>Select a previous saved lab report and upload a new report to compare progress.</p>
-          <div class="mb-ref-action green" onclick="event.stopPropagation(); document.querySelector('#open-saved-compare-btn button, #open-saved-compare-btn')?.click()">Use Saved Report â†’</div>
+          <div class="mb-ref-action green" onclick="event.stopPropagation(); document.querySelector('#open-saved-compare-btn button, #open-saved-compare-btn')?.click()">Use Saved Report →</div>
         </div>
 
         <div class="mb-ref-card" onclick="document.querySelector('#open-manual-compare-btn button, #open-manual-compare-btn')?.click()">
-          <div class="mb-ref-icon blue">â†<br/>â†’</div>
+          <div class="mb-ref-icon blue">←<br/>→</div>
           <div class="mb-ref-badge blue">Manual</div>
           <h3>Two Lab Reports</h3>
           <p>Upload both old and new lab reports manually for a technical comparison.</p>
-          <div class="mb-ref-action blue" onclick="event.stopPropagation(); document.querySelector('#open-manual-compare-btn button, #open-manual-compare-btn')?.click()">Compare PDFs â†’</div>
+          <div class="mb-ref-action blue" onclick="event.stopPropagation(); document.querySelector('#open-manual-compare-btn button, #open-manual-compare-btn')?.click()">Compare PDFs →</div>
         </div>
 
         <div class="mb-ref-card" onclick="document.querySelector('#open-xray-compare-btn button, #open-xray-compare-btn')?.click()">
-          <div class="mb-ref-icon purple">ðŸ©»</div>
+          <div class="mb-ref-icon purple">🩻</div>
           <div class="mb-ref-badge purple">Imaging</div>
           <h3>X-ray History</h3>
           <p>View prior and current X-rays side by side with a technical checklist.</p>
-          <div class="mb-ref-action purple" onclick="event.stopPropagation(); document.querySelector('#open-xray-compare-btn button, #open-xray-compare-btn')?.click()">Compare X-rays â†’</div>
+          <div class="mb-ref-action purple" onclick="event.stopPropagation(); document.querySelector('#open-xray-compare-btn button, #open-xray-compare-btn')?.click()">Compare X-rays →</div>
         </div>
       </div>
 
       <div class="mb-ref-steps">
         <div><div class="mb-ref-step-dot">1</div><div class="mb-ref-step-title">Choose</div><div class="mb-ref-step-sub">Pick mode</div></div>
-        <div class="mb-ref-arrow">â€º</div>
+        <div class="mb-ref-arrow">›</div>
         <div><div class="mb-ref-step-dot">2</div><div class="mb-ref-step-title">Upload</div><div class="mb-ref-step-sub">Add files</div></div>
-        <div class="mb-ref-arrow">â€º</div>
+        <div class="mb-ref-arrow">›</div>
         <div><div class="mb-ref-step-dot">3</div><div class="mb-ref-step-title">Compare</div><div class="mb-ref-step-sub">See results</div></div>
       </div>
     </div>
@@ -1947,7 +1947,7 @@ Important rules:
 - Accept genuine medical X-rays from any body area, including knee, chest, head/skull, spine, joints, arms, legs, hands, feet, shoulder, pelvis/hip, and other radiographs.
 - Reject non-X-ray images. If either uploaded image is not a medical X-ray, return exactly: Invalid image uploaded. Please upload a valid X-ray image.
 - If both images are valid X-rays but clearly show different body areas, return exactly: The uploaded X-rays appear to be from different body areas. Please upload matching X-rays for comparison.
-- Use cautious language such as â€œappears,â€ â€œsuggests,â€ â€œvisible on provided image,â€ and â€œradiologist confirmation required.â€
+- Use cautious language such as “appears,” “suggests,” “visible on provided image,” and “radiologist confirmation required.”
 - Do not invent findings that are not visible.
 - If image quality, projection, or body region is unclear, say so.
 - Compare only what can be seen in the uploaded images.
@@ -1989,7 +1989,7 @@ Choose one:
 Then explain why using visible image evidence.
 
 6. Key Differences
-List 3â€“5 specific differences between previous and current X-rays.
+List 3–5 specific differences between previous and current X-rays.
 
 7. Urgency / Review Flag
 Choose one:
@@ -2002,13 +2002,13 @@ Explain the reason briefly.
 8. Final Technical Summary
 Write a short paragraph comparing the two X-rays in plain language.
 
-Do not output generic instructions like â€œassess alignmentâ€ or â€œlook for cortical break.â€ Instead, state the actual observed finding, for example:
-â€œPrevious image shows a visible fracture line with displacement at the proximal tibia,â€
+Do not output generic instructions like “assess alignment” or “look for cortical break.” Instead, state the actual observed finding, for example:
+“Previous image shows a visible fracture line with displacement at the proximal tibia,”
 not
-â€œAssess for fracture displacement.â€
+“Assess for fracture displacement.”
 
 If you cannot confidently identify actual visual findings from both X-rays, return:
-â€œInsufficient image-specific findings extracted. Please upload clearer AP and lateral X-ray images.â€
+“Insufficient image-specific findings extracted. Please upload clearer AP and lateral X-ray images.”
 Do not generate a generic comparison checklist.
 """.strip()
 
@@ -2168,7 +2168,7 @@ def _xray_quote_for_status(status: str) -> str:
     if status == "worsened":
         return "Attention matters: early specialist review can help clarify the next safe step."
     if status == "unchanged":
-        return "Stability is useful information â€” keeping prior images makes clinical review much stronger."
+        return "Stability is useful information — keeping prior images makes clinical review much stronger."
     return "Clear images and side-by-side comparison help doctors see the story, not just one snapshot."
 
 
@@ -2240,15 +2240,15 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
     final_summary_clean = _clean_xray_summary_repetition(final_summary or interval_section or clean_text, differences[:3])
     final_summary_html = _esc(final_summary_clean).replace("\\n", "<br/>")
 
-    # â”€â”€ scan type shorthand â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── scan type shorthand ──────────────────────────────────────────────────
     prev_scan_type = _esc(prev_projection) if prev_projection else "N/A"
     curr_scan_type = _esc(curr_projection) if curr_projection else "N/A"
     scan_type_changed = prev_scan_type != curr_scan_type
 
-    # â”€â”€ condition bar position â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── condition bar position ───────────────────────────────────────────────
     prog_pct = {"Improved": 18, "Unchanged": 48, "Indeterminate": 48, "Worsened": 82}.get(status, 48)
 
-    # â”€â”€ status colour (green-theme compatible) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── status colour (green-theme compatible) ───────────────────────────────
     status_color = "#087057"          # default green
     status_bg    = "#ecfdf5"
     status_border= "#d8f3e6"
@@ -2265,7 +2265,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
     elif "prompt" in urgency.lower():
         urgency_color = "#b45309"; urgency_bg = "#fffbeb"; urgency_border = "#fde68a"
 
-    # â”€â”€ key-action cards â€“ full informative text from AI differences â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── key-action cards – full informative text from AI differences ─────────
     action_num_colors = ["#087057", "#0f5f4b", "#166534"]
     action_cards_html = ""
     for i, diff in enumerate(differences[:3], start=1):
@@ -2276,7 +2276,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
           <p>{_esc(diff)}</p>
         </div>"""
 
-    # â”€â”€ detailed findings rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── detailed findings rows ───────────────────────────────────────────────
     curr_soft_alert = status == "Worsened"
     findings_rows = f"""
       <tr>
@@ -2328,7 +2328,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
         box-shadow: 0 18px 44px rgba(8,112,87,.07);
       }}
 
-      /* â”€â”€ Header â”€â”€ */
+      /* ── Header ── */
       .rx-hero {{
         background: radial-gradient(circle at top left, rgba(187,247,208,.72), transparent 34%),
                     linear-gradient(135deg, #ecfdf5, #ffffff 74%);
@@ -2370,7 +2370,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
         border: 1.5px solid;
       }}
 
-      /* â”€â”€ Condition bar â”€â”€ */
+      /* ── Condition bar ── */
       .rx-bar-card {{
         background: #ffffff;
         border: 1px solid #d8f3e6;
@@ -2416,7 +2416,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
         box-shadow: 0 2px 8px rgba(0,0,0,.18);
       }}
 
-      /* â”€â”€ X-ray images â”€â”€ */
+      /* ── X-ray images ── */
       .rx-image-grid {{
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -2444,7 +2444,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
         background: #f0fdf4;
       }}
 
-      /* â”€â”€ Prev vs Current â”€â”€ */
+      /* ── Prev vs Current ── */
       .rx-section-title {{
         font-size: 17px;
         font-weight: 900;
@@ -2522,7 +2522,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
       }}
       .rx-vs-row-val.alert {{ color: #b91c1c; font-weight: 800; }}
 
-      /* â”€â”€ Key Comparison Points â”€â”€ */
+      /* ── Key Comparison Points ── */
       .rx-actions-grid {{
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -2560,7 +2560,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
         font-weight: 700;
       }}
 
-      /* â”€â”€ AI Explanation â”€â”€ */
+      /* ── AI Explanation ── */
       .rx-ai-card {{
         background: linear-gradient(135deg, #f8fffb, #ffffff);
         border: 1px solid #cfeee1;
@@ -2591,7 +2591,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
         font-weight: 720;
       }}
 
-      /* â”€â”€ Findings table â”€â”€ */
+      /* ── Findings table ── */
       .rx-findings-wrap {{
         background: #ffffff;
         border: 1px solid #d8f3e6;
@@ -2647,7 +2647,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
       .rx-tag-changed {{ background: #eff6ff; color: #1d4ed8; }}
       .rx-tag-warn    {{ background: #fff1f2; color: #b91c1c; }}
 
-      /* â”€â”€ Disclaimer â”€â”€ */
+      /* ── Disclaimer ── */
       .rx-disclaimer {{
         font-size: 12px;
         color: #6b8179;
@@ -2675,10 +2675,10 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
         <h2 class="rx-hero-title">X-Ray Comparison Dashboard</h2>
         <div class="rx-pill-row">
           <span class="rx-pill" style="color:{status_color};border-color:{status_border};background:{status_bg};">
-            â†‘ Status: {_esc(status)}
+            ↑ Status: {_esc(status)}
           </span>
           <span class="rx-pill" style="color:{urgency_color};border-color:{urgency_border};background:{urgency_bg};">
-            âš‘ {_esc(urgency)}
+            ⚑ {_esc(urgency)}
           </span>
           <span class="rx-pill" style="color:#087057;border-color:#d8f3e6;background:#ecfdf5;">
             Region: {_esc(body_region) if body_region else "Chest"}
@@ -2710,11 +2710,11 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
       </div>
 
       <!-- 3. Previous vs Current -->
-      <div class="rx-section-title">â‡„ Previous vs. Current</div>
+      <div class="rx-section-title">⇄ Previous vs. Current</div>
       <div class="rx-vs-grid">
         <div class="rx-vs-col">
           <div class="rx-vs-col-label prev">
-            â— Previous Scan <span class="rx-vs-badge">Baseline</span>
+            ● Previous Scan <span class="rx-vs-badge">Baseline</span>
           </div>
           <div class="rx-vs-row">
             <div class="rx-vs-row-lbl">Scan Type</div>
@@ -2731,7 +2731,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
         </div>
         <div class="rx-vs-col">
           <div class="rx-vs-col-label curr">
-            â— Current Scan <span class="rx-vs-badge latest">Latest</span>
+            ● Current Scan <span class="rx-vs-badge latest">Latest</span>
           </div>
           <div class="rx-vs-row">
             <div class="rx-vs-row-lbl">Scan Type</div>
@@ -2749,14 +2749,14 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
       </div>
 
       <!-- 4. Key Comparison Points -->
-      <div class="rx-section-title">âœ¦ Key Comparison Points</div>
+      <div class="rx-section-title">✦ Key Comparison Points</div>
       <div class="rx-actions-grid">
         {action_cards_html}
       </div>
 
       <!-- 5. AI Explanation -->
       <div class="rx-ai-card">
-        <div class="rx-ai-card-title">ðŸ¤– AI Explanation</div>
+        <div class="rx-ai-card-title">🤖 AI Explanation</div>
         <div class="rx-ai-body">{final_summary_html or "The previous and current X-rays show notable differences. Please consult a radiologist for full interpretation."}</div>
       </div>
 
@@ -2778,7 +2778,7 @@ def _format_xray_ai_result(text: str, previous_xray: Any, current_xray: Any) -> 
 
       <!-- Disclaimer -->
       <div class="rx-disclaimer">
-        â„¹ï¸ {_esc(XRAY_DISCLAIMER)}
+        ℹ️ {_esc(XRAY_DISCLAIMER)}
       </div>
 
     </div>
@@ -2843,10 +2843,10 @@ def build_xray_comparison_html(previous_xray: Any, current_xray: Any) -> str:
     if not xray_ok:
         return _comparison_error(xray_message)
 
-    # â”€â”€ Call Groq vision â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Call Groq vision ────────────────────────────────────────────────────
     result = _groq_xray_call(previous_xray, current_xray)
 
-    # â”€â”€ No result means Groq client missing or call failed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── No result means Groq client missing or call failed ──────────────────
     if not result:
         return _comparison_error(
             "X-ray comparison requires a GROQ_API_KEY. "
@@ -2854,7 +2854,7 @@ def build_xray_comparison_html(previous_xray: Any, current_xray: Any) -> str:
             "Get a free key at https://console.groq.com"
         )
 
-    # â”€â”€ Validate model output â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Validate model output ───────────────────────────────────────────────
     generic_forbidden = [
         "assess alignment",
         "look for cortical break",
@@ -3007,7 +3007,7 @@ def build_full_comparison_dashboard_ui():
 
     # Screen 2A: saved report comparison.
     with gr.Column(visible=False, elem_classes=["mb-screen-panel"]) as saved_panel:
-        close_saved_btn = gr.Button("â† Back to comparison choices", elem_classes=["mb-panel-back"])
+        close_saved_btn = gr.Button("← Back to comparison choices", elem_classes=["mb-panel-back"])
         gr.HTML("""
         <div class="mb-panel-title">
           <b>Saved comparison:</b>
@@ -3046,7 +3046,7 @@ def build_full_comparison_dashboard_ui():
 
     # Screen 2B: manual two-report comparison.
     with gr.Column(visible=False, elem_classes=["mb-screen-panel"]) as manual_panel:
-        close_manual_btn = gr.Button("â† Back to comparison choices", elem_classes=["mb-panel-back"])
+        close_manual_btn = gr.Button("← Back to comparison choices", elem_classes=["mb-panel-back"])
         gr.HTML("""
         <div class="mb-panel-title">
           <b>Manual comparison:</b>
@@ -3076,7 +3076,7 @@ def build_full_comparison_dashboard_ui():
 
     # Screen 2C: x-ray comparison.
     with gr.Column(visible=False, elem_classes=["mb-screen-panel"]) as xray_panel:
-        close_xray_btn = gr.Button("â† Back to comparison choices", elem_classes=["mb-panel-back"])
+        close_xray_btn = gr.Button("← Back to comparison choices", elem_classes=["mb-panel-back"])
         gr.HTML("""
         <div class="mb-panel-title">
           <b>X-ray comparison:</b>

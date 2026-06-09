@@ -60,11 +60,24 @@ def _history_dataframe(rows: List[Dict[str, Any]]) -> pd.DataFrame:
     "abnormal_count",
     "status",
   ]
+  display_columns = {
+    "timestamp": "Time",
+    "analysis_type": "Type",
+    "file_name": "File",
+    "report_subtype": "Report",
+    "risk_level": "Risk",
+    "risk_score": "Risk Score",
+    "ocr_quality": "OCR Quality",
+    "ocr_score": "OCR Score",
+    "total_tests": "Tests",
+    "abnormal_count": "Abnormal",
+    "status": "Status",
+  }
   df = pd.DataFrame(rows)
   if df.empty:
-    return pd.DataFrame(columns=desired_columns)
+    return pd.DataFrame(columns=[display_columns[c] for c in desired_columns])
   keep = [c for c in desired_columns if c in df.columns]
-  return df[keep]
+  return df[keep].rename(columns=display_columns)
 
 
 def _counter_from_rows(rows: Iterable[Dict[str, Any]], key: str, fallback: str = "Unknown") -> Dict[str, int]:
@@ -1107,7 +1120,25 @@ svg { width: 100%; height: auto; display: block; }
 #history-table label { color: var(--text) !important; font-weight: 700 !important; }
 #history-table .wrap.svelte-1ipelgc,
 #history-table .table-wrap,
-#history-table .table-container { background: transparent !important; }
+#history-table .table-container {
+ background: transparent !important;
+ overflow-x: auto !important;
+}
+#history-table table {
+ min-width: 1100px !important;
+ table-layout: auto !important;
+}
+#history-table th,
+#history-table td {
+ white-space: nowrap !important;
+ word-break: normal !important;
+ overflow-wrap: normal !important;
+ font-size: 13px !important;
+}
+#history-table th {
+ font-weight: 800 !important;
+ color: var(--text) !important;
+}
 
 /* Status indicators */
 #dashboard-status, #login-status { min-height: 10px; }
@@ -1195,7 +1226,7 @@ with gr.Blocks(title="MediBuddy AI Admin", theme=MEDIBUDDY_THEME, css=ADMIN_CSS)
         history_table = gr.Dataframe(
           label="Recent Analysis History",
           interactive=False,
-          wrap=True,
+          wrap=False,
           elem_id="history-table",
         )
 

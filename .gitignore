@@ -1,9 +1,30 @@
-﻿venv/
+# Local secrets / environments
+.env
+.git/
+venv/
 .venv/
 src/venv/
+
+# Python cache
 __pycache__/
 *.pyc
-.env
+
+# Streamlit/other local secrets
 .streamlit/secrets.toml
 
+# Backup/dev-only files
 src/userappbackup.py
+
+# Runtime data: ignore old uploaded/generated files but keep folders
+data/uploads/*
+!data/uploads/.gitkeep
+data/reports/*
+!data/reports/.gitkeep
+data/comparison/*
+!data/comparison/.gitkeep
+data/saved_lab_reports/*
+!data/saved_lab_reports/.gitkeep
+data/saved_xrays/*
+!data/saved_xrays/.gitkeep
+data/logs/*
+!data/logs/.gitkeep

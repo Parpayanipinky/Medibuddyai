@@ -8,3 +8,6 @@ matplotlib
 python-dotenv
 PyMuPDF
 reportlab
+pytesseract
+sympy>=1.13.3
+mpmath==1.3.0
