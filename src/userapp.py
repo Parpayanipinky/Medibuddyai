@@ -6780,7 +6780,7 @@ def analyze_medical_report_ui(uploaded_file, pdf_language="English"):
         if cache_key and cache_key in REPORT_ANALYSIS_CACHE:
             cached_outputs = REPORT_ANALYSIS_CACHE[cache_key]
             cached_outputs = list(cached_outputs)
-            cached_outputs[0] = "Report loaded instantly from cache."
+            cached_outputs[0] = "Report uploaded successfully. Click Analyze Lab Report."
             return tuple(cached_outputs)
 
         ext = os.path.splitext(file_path)[1].lower()
